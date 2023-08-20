@@ -379,8 +379,8 @@
             "time": "12:00",
             "day": 1,
             "teamA": [0,3],
-            "teamB": [0,3],
-            "referee": [0,5],
+            "teamB": [1,3],
+            "referee": [0,4],
             "score": ["", ""]
         },
         {
@@ -396,45 +396,45 @@
             "group": -2,
             "time": "13:00",
             "day": 1,
-            "teamA": 10,
+            "teamA": 8,
             "teamB": 9,
-            "referee": 6,
+            "referee": 5,
             "score": ["", ""]
         },
         {
             "group": -2,
             "time": "13:30",
             "day": 1,
-            "teamA": 8,
+            "teamA": 6,
             "teamB": 7,
-            "referee": 4,
+            "referee": 3,
             "score": ["", ""]
         },
         {
             "group": -2,
             "time": "14:00",
             "day": 1,
-            "teamA": 6,
+            "teamA": 4,
             "teamB": 5,
-            "referee": 9,
+            "referee": 8,
             "score": ["", ""]
         },
         {
             "group": -2,
             "time": "14:30",
             "day": 1,
-            "teamA": 4,
+            "teamA": 2,
             "teamB": 3,
-            "referee": 7,
+            "referee": 6,
             "score": ["", ""]
         },
         {
             "group": -2,
             "time": "15:00",
             "day": 1,
-            "teamA": 1,
-            "teamB": 2,
-            "referee": 5,
+            "teamA": 0,
+            "teamB": 1,
+            "referee": 4,
             "score": ["", ""]
         }
     ],

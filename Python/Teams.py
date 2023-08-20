@@ -60,6 +60,9 @@ class Team:
         for game in self.games:
             minusGoals += game[1]
         return minusGoals
+    
+    def getGoalDiff(self):
+        return self.getPlusGoals() - self.getMinusGoals()
             
     def refreshPlayerList(self):
         for player in self.players:

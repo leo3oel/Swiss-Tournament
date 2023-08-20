@@ -1,1 +1,6 @@
 Python/__pycache__/*
+PdfPlan/*
+turnier2023WithScores.json
+
+!PdfPlan/template.tex
+!PdfPlan/kcwlogo.png

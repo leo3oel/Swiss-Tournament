@@ -1,0 +1,80 @@
+%LuaLateX
+%compilen per :!lualatex %
+
+%Standard
+\documentclass[12pt, a4paper]{article}
+\usepackage{fontspec}
+%\usepackage{marginnote}
+\usepackage[german]{babel}
+\usepackage[hidelinks]{hyperref}
+
+%Grafik
+\usepackage{float}
+%\usepackage{pgf-pie}
+\usepackage{pdfpages}
+%\usepackage{pgf, tikz} %Tikz GRAPHICS
+
+%Seitenlayout, Margins verkleinern
+\usepackage[a4paper, top=2.5cm,bottom=30mm, left=3cm, right=3cm]{geometry} 
+\usepackage{setspace}%Zeilenabstand verändern zB \onehalfspacing(Präambel)
+
+%Mathe, Grafiken
+\usepackage{amsmath}
+\usepackage{csquotes}
+\usepackage{graphicx} %Für Bilder
+\usepackage{subcaption} %Für subfigure
+\usepackage{siunitx}
+\usepackage{parskip}
+%Bruchstrich
+\sisetup{per-mode=fraction, output-decimal-marker = {,}, exponent-product=\cdot}
+%Hier beliebige Einheiten hinzufügen
+\DeclareSIUnit\year{Jahre}
+
+%Kopf-Fußzeile
+\usepackage{fancyhdr}
+%\fancyhf{}
+\pagestyle{fancy}
+\fancyhead[L]{}
+\fancyhead[R]{\includegraphics[width=1.75cm]{kcwlogo.png}}
+\renewcommand{\headrulewidth}{0pt}
+\cfoot{}
+\usepackage{marginnote}
+
+%Section auf größe von subsection setzen
+\usepackage{titlesec}
+\titleformat*{\section}{\large\bfseries}
+
+
+%Titel
+\title{Spielplan: 2. Kanupoloturnier}
+\date{}
+\author{}
+%Dokument
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+\section*{Die Teams}
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|{%- for group in groups -%}
+            l|
+            {%- endfor -%}
+            }
+        {%- for line in teamNames %}
+            {{ line }}
+        {%- endfor %}
+        \end{tabular}
+    \end{table}
+{%- for day in days %}
+\section*{ {{ day }} }
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{l|l|l|l|lcl|l|l}
+            Nr & Zeit & Gr. & Team A & \multicolumn{3}{|c|}{Ergebnis} & Team B & Schiedsrichter \\\hline\hline
+            {%- for game in games[loop.index-1] %}
+            {{ game }}
+            {%- endfor %}
+        \end{tabular}
+    \end{table}
+{%- endfor %}
+\end{document}
