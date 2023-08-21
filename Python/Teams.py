@@ -90,6 +90,10 @@ class Team:
         if playerNumber not in playerNumberList:
             self.players.append(Player(playerNumber, "Unknown", 0, 0, 0, 0))
 
+    def getPlayersList(self):
+        self.refreshPlayerList()
+        return self.players()
+
 if __name__ == "__main__":
     list = [Player(1,"Name", 0,0,0,0), Player(2,"Name", 0,0,0,0)]
     playerNumberList = [player.number for player in list]

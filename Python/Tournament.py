@@ -148,6 +148,17 @@ class Tournament:
                 print(team.name + " " + str(team.getPoints()) + " " + str(team.getGoalDiff()) + " " + str(team.getPlusGoals()) + " " + str(team.getMinusGoals()))
             print()
 
+    # def getPlayersWithTeams(self):
+    #     players = []
+    #     for group in self.teams:
+    #         for team in group:
+    #             playerList = [team.name]
+    #             for player in team.players:
+    #                 playerList += player
+    #             players.append(playerList)
+    #     return player
+
 if __name__ == "__main__":
     main = Tournament()
     main.printTable()
+    print(main.getPlayersWithTeams())
