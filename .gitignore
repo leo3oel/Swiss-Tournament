@@ -1,6 +1,8 @@
 Python/__pycache__/*
 PdfPlan/*
 turnier2023WithScores.json
+Reports/*
 
 !PdfPlan/template.tex
 !PdfPlan/kcwlogo.png
+!Reports/template.xslx

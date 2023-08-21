@@ -1,14 +1,22 @@
-import openpyxl
+import openpyxl, os, pdfkit
+import pandas as pd
+
+from Tournament import Tournament
 
 class Report:
 
-    def __init__(self, game, dates, templatePath):
+    def __init__(self, game, number, dates, templatePath):
         self.__date = dates[game.day]
         self.__teamA = game.teamA
         self.__teamB = game.teamB
-        self.__referee = game.referre.name
+        self.__referee = game.referee.name
         self.__time = game.time
         self.__templatePath = templatePath
+        self.__gameNumber = number
+        filename = "report_Game-" + str(number) + ".xslx"
+        pdfFileName = "report_Game-" + str(number) + ".pdf"
+        self.__outputPath = os.path.join(os.path.dirname(templatePath), filename)
+        self.__outputPathPdf = os.path.join(os.path.dirname(templatePath), pdfFileName)
 
     def generateReport(self):
         template = openpyxl.load_workbook(self.__templatePath)
@@ -18,13 +26,36 @@ class Report:
         sheet.cell(row=12, column=4).value = self.__referee
         sheet.cell(row=22, column=2).value = self.__teamA.name
         sheet.cell(row=22, column=6).value = self.__teamB.name
-        self.enterPlayers(sheet, self.__teamA.players, )
+        sheet.cell(row=7, column=1).value = self.__gameNumber
+        self.__enterPlayers(sheet, self.__teamA.players, [24, [1, 2, 4]])
+        self.__enterPlayers(sheet, self.__teamB.players, [24, [5, 6, 7]])
+        template.save(filename=self.__outputPath)
 
-
-    def enterPlayers(self, sheet, players, startCell):
+    def __enterPlayers(self, sheet, players, startCell):
         currentCell = startCell
         for player in players:
-            sheet.cell(row=currentCell[0], column=currentCell[1]).value = player[0]
-            sheet.cell(row=currentCell[0], column=currentCell[1]+1).value = player[1]
-            sheet.cell(row=currentCell[0], column=currentCell[1]+2).value = player[2]
-            currentCell[0] += 1
+            if player.number > 0:
+                sheet.cell(row=currentCell[0], column=currentCell[1][0]).value = player.number
+                sheet.cell(row=currentCell[0], column=currentCell[1][1]).value = player.name[0]
+                sheet.cell(row=currentCell[0], column=currentCell[1][2]).value = player.name[1]
+                currentCell[0] += 1
+
+class GenerateReports:
+
+    templatePath = os.path.join(os.getcwd(), "Reports", "template.xlsx")
+
+    @staticmethod
+    def generateGroupReports(tournament):
+        for index, game in enumerate(tournament.games):
+            try:
+                report = Report(game, index+1, tournament.dates, GenerateReports.templatePath)
+                report.generateReport()
+            except:
+                print("Error occured stopped at Game Nr. " + str(index+1))
+                os.remove("file.html")
+                break
+            
+
+if __name__ == "__main__":
+    tournament = Tournament()
+    GenerateReports.generateGroupReports(tournament)
