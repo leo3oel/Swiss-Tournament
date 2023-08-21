@@ -20,6 +20,8 @@ class PdfGenerator:
         cwd = os.getcwd()
         os.chdir(os.path.dirname(self.outputPath))
         subprocess.run(["lualatex", self.outputPath])
+        subprocess.run(["lualatex", self.outputPath])
+        
         os.chdir(cwd)
         
 
