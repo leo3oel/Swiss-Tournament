@@ -438,5 +438,6 @@
             "score": ["", ""]
         }
     ],
-    "days": ["Samstag", "Sonntag"]
+    "days": ["Samstag", "Sonntag"],
+    "dates": ["02.09.2023", "03.09.2023"]
 }

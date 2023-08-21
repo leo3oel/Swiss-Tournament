@@ -13,6 +13,7 @@ class Tournament:
         self.teams = self.__getTeams(restored["teams"])
         self.games = self.__getGames(restored["games"], restored["days"])
         self.days = restored["days"]
+        self.dates = restored["dates"]
 
     def __getTeams(self, restoredTeams):
         teams = []
