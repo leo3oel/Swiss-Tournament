@@ -4,11 +4,12 @@
             "name": "KC Würzburg 1",
             "group": 0,
             "players": [
-                [4, "Alexandra Sink", 0, 0, 0, 0],
-                [3, "Barbara Hahn", 0, 0, 0, 0],
-                [14, "Daniel Zaumsegel", 0, 0, 0, 0],
-                [15, "Leonhard Schraut", 0, 0, 0, 0],
-                [17, "Rainer Saam", 0, 0, 0, 0]
+                [4, ["Alexandra", "Sink"], 0, 0, 0, 0],
+                [3, ["Barbara", "Hahn"], 0, 0, 0, 0],
+                [10, ["Andreas", ""], 0, 0, 0, 0],
+                [14, ["Daniel", "Zaumsegel"], 0, 0, 0, 0],
+                [15, ["Leonhard", "Schraut"], 0, 0, 0, 0],
+                [17, ["Rainer", "Saam"], 0, 0, 0, 0]
             ],
             "points": 0,
             "goals+": 0,
@@ -19,12 +20,15 @@
             "name": "KC Würzburg 2",
             "group": 0,
             "players": [
-                [4, "Sophie Müller", 0, 0, 0, 0],
-                [5, "Nico Baumann", 0, 0, 0, 0],
-                [6, "Leonhard Saam", 0, 0, 0, 0],
-                [8, "Timo Müller", 0, 0, 0, 0],
-                [11, "Iris Burkard", 0, 0, 0, 0],
-                [13, "Julian Trappe", 0, 0, 0, 0]
+                [3, ["Johanna", "Eller"], 0, 0, 0, 0],
+                [4, ["Janina", "Eiberger"], 0, 0, 0, 0],
+                [5, ["Birgit", "Seiler"], 0, 0, 0, 0],
+                [7, ["Melanie", "Ruhmann"], 0, 0, 0, 0],
+                [10, ["Florian", "Müller"], 0, 0, 0, 0],
+                [12, ["Moritz", "Haverkamp"], 0, 0, 0, 0],
+                [13, ["Georg", "Schraut"], 0, 0, 0, 0],
+                [14, ["Johannes", "Wich"], 0, 0, 0, 0],
+                [16, ["Maik", "Springer"], 0, 0, 0, 0]
             ],
             "points": 0,
             "goals+": 0,
@@ -35,12 +39,12 @@
             "name": "Neckarkrokodile",
             "group": 0,
             "players": [
-                [12, "Edith Baader", 0, 0, 0, 0],
-                [13, "Paul Joseph", 0, 0, 0, 0],
-                [14, "Dominik Embach", 0, 0, 0, 0],
-                [15, "Paul Grote", 0, 0, 0, 0],
-                [16, "Julia Jäger", 0, 0, 0, 0],
-                [17, "Lukas Hennemann", 0, 0, 0, 0]
+                [12, ["Edith", "Baader"], 0, 0, 0, 0],
+                [13, ["Paul", "Joseph"], 0, 0, 0, 0],
+                [14, ["Dominik", "Embach"], 0, 0, 0, 0],
+                [15, ["Paul", "Grote"], 0, 0, 0, 0],
+                [16, ["Julia", "Jäger"], 0, 0, 0, 0],
+                [17, ["Lukas", "Hennemann"], 0, 0, 0, 0]
             ],
             "points": 0,
             "goals+": 0,
@@ -69,15 +73,12 @@
             "name": "KC Würzburg 3",
             "group": 1,
             "players": [
-                [3, "Johanna Eller", 0, 0, 0, 0],
-                [4, "Janina Eiberger", 0, 0, 0, 0],
-                [5, "Birgit Seiler", 0, 0, 0, 0],
-                [7, "Melanie Ruhmann", 0, 0, 0, 0],
-                [9, "Florian Müller", 0, 0, 0, 0],
-                [10, "Johannes Wich", 0, 0, 0, 0],
-                [12, "Moritz Haverkamp", 0, 0, 0, 0],
-                [13, "Georg Schraut", 0, 0, 0, 0],
-                [16, "Maik Springer", 0, 0, 0, 0]
+                [4, ["Sophie", "Müller"], 0, 0, 0, 0],
+                [5, ["Nico", "Baumann"], 0, 0, 0, 0],
+                [6, ["Leonhard", "Saam"], 0, 0, 0, 0],
+                [8, ["Timo", "Müller"], 0, 0, 0, 0],
+                [11, ["Iris", "Burkard"], 0, 0, 0, 0],
+                [13, ["Julian", "Trappe"], 0, 0, 0, 0]
             ],
             "points": 0,
             "goals+": 0,
@@ -103,7 +104,7 @@
             "games" : []
         },
         {
-            "name": "Schleißheimer PC",
+            "name": "SG MüWü",
             "group": 1,
             "players": [],
             "points": 0,
