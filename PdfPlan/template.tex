@@ -69,8 +69,8 @@
 \section*{ {{ day }} }
     \begin{table}[H]
         \centering
-        \begin{tabular}{l|l|l|l|lcl|l|l}
-            Nr & Zeit & Gr. & Team A & \multicolumn{3}{|c|}{Ergebnis} & Team B & Schiedsrichter \\\hline\hline
+        \begin{tabular}{l{% if not swiss %}|l {% endif %}|l|l|lcl|l|l}
+            Nr & Zeit {% if not swiss %}& Gr. {% endif %} & Team A & \multicolumn{3}{|c|}{Ergebnis} & Team B & Schiedsrichter \\\hline\hline
             {%- for game in games[loop.index-1] %}
             {{ game }}
             {%- endfor %}

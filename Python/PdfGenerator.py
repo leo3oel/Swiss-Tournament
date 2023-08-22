@@ -4,17 +4,18 @@ from DefinedTournament import DefinedTournament
 
 class PdfGenerator:
 
-    def __init__(self):
+    def __init__(self, tournament, swiss):
         self.templatePath = os.path.join(os.getcwd(), "PdfPlan", "template.tex")
         self.outputPath = os.path.join(os.getcwd(), "PdfPlan", "spielplan.tex")
+        self.tournament = tournament
+        self.swiss = swiss
         with open(self.templatePath) as file:
             self.template = jinja2.Template(file.read())
 
     def generateTexFile(self):
-        tournament = DefinedTournament()
-        teamNames = self.__formatGroupsForPrinting(tournament.teams)
-        games = self.__formatGamesForPrinting(tournament.games)
-        output = self.template.render(teamNames=teamNames, groups=tournament.teams, days=tournament.days, games=games)
+        teamNames = self.__formatGroupsForPrinting(self.tournament.teams)
+        games = self.__formatGamesForPrinting(self.tournament.games)
+        output = self.template.render(teamNames=teamNames, groups=self.tournament.teams, days=self.tournament.days, games=games, swiss=self.swiss)
         with open(self.outputPath, 'w') as file:
             file.write(output)
         cwd = os.getcwd()
@@ -27,8 +28,12 @@ class PdfGenerator:
     def __formatGroupsForPrinting(self, teams):
         teamNames = []
         firstLine = []
-        for iterator in range(len(teams)):
-            firstLine.append("Gruppe " + chr(ord('A')+iterator))
+        if self.swiss:
+            firstLine.append("Teams")
+            teams = [teams]
+        else:
+            for iterator in range(len(teams)):
+                firstLine.append("Gruppe " + chr(ord('A')+iterator))
         firstLine[-1] = firstLine[-1] + r'\\\hline\hline'
         teamNames.append(" & ".join(firstLine))
         for iterator in range(len(teams[0])):
@@ -48,7 +53,8 @@ class PdfGenerator:
                 days.append([])
             formatedString = str(gameNumber) + " & "
             formatedString += game.time + " & "
-            formatedString += game.group + " & "
+            if not self.swiss:
+                formatedString += game.group + " & "
             if type(game.teamA) is str:
                 formatedString += game.teamA + " & "
             else:

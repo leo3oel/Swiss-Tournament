@@ -21,7 +21,7 @@ class SaveAndRestore:
                 dict,
                 indent=4, 
                 ensure_ascii=False)
-            with open(fileName, "w") as file:
+            with open(fileName.name, "w") as file:
                 file.write(jsonFile)
         except Exception as e:
             msgbox.showerror("Cannot Read File", "File is unreadable")

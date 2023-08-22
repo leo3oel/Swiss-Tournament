@@ -131,6 +131,11 @@ class Team:
             "gamesRefed": self.gamesRefed
         }
         return dict
+    
+class EmptyTeam(Team):
+
+    def __init__(self):
+        super().__init__("", -5, [], [], 0)
 
 if __name__ == "__main__":
     list = [Player(1,"Name", 0,0,0,0), Player(2,"Name", 0,0,0,0)]

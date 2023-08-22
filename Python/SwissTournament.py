@@ -4,6 +4,8 @@ import datetime
 from Tournament import Tournament
 from Games import Game
 from SaveAndRestore import SaveAndRestore
+from Teams import EmptyTeam
+from PdfGenerator import PdfGenerator
 
 class SwissTournament(Tournament):
 
@@ -15,6 +17,7 @@ class SwissTournament(Tournament):
         self.rounds = self.restored["rounds"]
         self.timePerGame = self.restored["timePerGame"]
         self.breakBetweenRounds = self.restored["breakBetweenRounds"]
+        self.emptyTeam = EmptyTeam()
 
     def joinTeamsToOneGroup(self):
         oneGroup = []
@@ -25,45 +28,59 @@ class SwissTournament(Tournament):
     def generateGames(self):
         numberOfGamesPerRound = int(len(self.teams)/2)
         sortedTable = self.sortGroups([self.teams])[0]
-        if len(self.games) > 0 and self.previousRoundFinished(numberOfGamesPerRound):
-            pass
-        elif len == 0:
-            self.__currentMatches = self.getTeamsToMatch(sortedTable)
-            self.__addReferees()
-            self.getMatchOrder(self.__currentMatches)
-            self.__currentMatches
-            self.__addGamesToList()
+        # if len(self.games) > 0 and self.previousRoundFinished(numberOfGamesPerRound):
+        #     pass
+        # elif len(self.games) == 0:
+        #     pass
+        for roundNumber in range(0, self.rounds):
+            firstGameOfRound = roundNumber*numberOfGamesPerRound
+            if self.previousRoundFinished(roundNumber, numberOfGamesPerRound) or roundNumber == 0:
+                self.__currentMatches = self.getTeamsToMatch(sortedTable)
+                self.__addReferees()
+                self.getMatchOrder(self.__currentMatches)
+                self.__addGamesToList(firstGameOfRound)
+            else:
+                self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
+                self.__addGamesToList(firstGameOfRound)
 
-    def __addGamesToList(self):
+    def __addGamesToList(self, firstGameOfRound):
         currentDateTime = datetime.datetime.strptime(self.startTimes[0], '%H:%M')
         currentDay = 0
         if len(self.games)>0:
             currentDateTime = datetime.datetime.strptime(self.games[-1].time, '%H:%M')
             currentDateTime += datetime.timedelta(minutes=(self.breakBetweenRounds+self.timePerGame))
-            currentDay = self.days.index(self.games[-1].date)
-        for game in self.__currentMatches:
-            if len(self.endTimes) > currentDay:
-                if currentDateTime > datetime.datetime.strptime(self.endTimes[currentDay], '%H:%M'):
-                    currentDay += 1
-                    currentDateTime = datetime.datetime.strptime(self.startTimes[currentDay], '%H:%M')
-            currentTime = currentDateTime.strftime('%H:%M')
-            self.games.append(
-                Game(
-                    "0",
-                    currentTime,
-                    currentDay,
-                    game[0],
-                    game[1],
-                    game[2],
-                    ["", ""]
-                    )
-            )
-            game[2].gamesRefed += 1
-            currentDateTime += datetime.timedelta(minutes=(self.timePerGame))
+            currentDay = self.games[-1].day
+        if len(self.games) <= firstGameOfRound:
+            for game in self.__currentMatches:
+                if len(self.endTimes) > currentDay:
+                    if currentDateTime > datetime.datetime.strptime(self.endTimes[currentDay], '%H:%M'):
+                        currentDay += 1
+                        currentDateTime = datetime.datetime.strptime(self.startTimes[currentDay], '%H:%M')
+                currentTime = currentDateTime.strftime('%H:%M')
+                self.games.append(
+                    Game(
+                        "0",
+                        currentTime,
+                        currentDay,
+                        game[0],
+                        game[1],
+                        game[2],
+                        ["", ""]
+                        )
+                )
+                game[2].gamesRefed += 1
+                currentDateTime += datetime.timedelta(minutes=(self.timePerGame))
+        else:
+            pass
+            # TODO: Modify games List insetad of appending it
 
-    def getTeamsToMatch(self, sortedTable):
+    def getTeamsToMatch(self, sortedTable, emptyMode=False):
         matches = []
         selectedTeamBs = []
+        if emptyMode:
+            for index in range(int(len(sortedTable)/2)):
+                matches.append([self.emptyTeam, self.emptyTeam, self.emptyTeam])
+            return matches
         for teamAIndex in range(len(sortedTable)-1):
             if not teamAIndex in selectedTeamBs:
                 for teamBIndex in range(teamAIndex+1, len(sortedTable)):
@@ -75,16 +92,22 @@ class SwissTournament(Tournament):
 
     def checkIfGameExists(self, teamA, teamB):
         for game in self.games:
-            if game.teamA.name == teamA.name and game.teamB.name == teamB.name:
-                return True
-            if game.teamA.name == teamB.name and game.teamB.name == teamA.name:
-                return True
+            try:
+                if game.teamA.name == teamA.name and game.teamB.name == teamB.name:
+                    return True
+                if game.teamA.name == teamB.name and game.teamB.name == teamA.name:
+                    return True
+            except:
+                return False
         return False
     
-    def previousRoundFinished(self, numberOfGamesPerRound):
-        for game in self.games[-numberOfGamesPerRound:]:
-            if type(game.score[0]) is not int:
+    def previousRoundFinished(self, roundNumber, numberOfGamesPerRound):
+        lastGamePreviousRound = roundNumber*numberOfGamesPerRound-1
+        try:
+            if type(self.games[lastGamePreviousRound].score[0]) is not int:
                 return False
+        except:
+            return False
         return True
     
     def getMatchOrder(self, teamsToMatch):
@@ -184,10 +207,14 @@ class SwissTournament(Tournament):
         }
         SaveAndRestore.save(self.fileName, dict)
         
+    def generatePdf(self):
+        generator = PdfGenerator(self, True)
+        generator.generateTexFile()
 
 if __name__ == "__main__":
     import os
     swissTournament = SwissTournament()
     swissTournament.generateGames()
     swissTournament.saveFile()
+    swissTournament.generatePdf()
 

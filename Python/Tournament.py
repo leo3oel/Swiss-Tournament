@@ -1,7 +1,7 @@
 from tkinter import filedialog
 
 from SaveAndRestore import SaveAndRestore
-from Teams import Team
+from Teams import Team, EmptyTeam
 from Games import Game
 
 class Tournament:
@@ -40,6 +40,8 @@ class Tournament:
         return games
     
     def __getTeamFromTeamName(self, teamName):
+        if teamName == "":
+            return EmptyTeam()
         for group in self.teams:
             for team in group:
                 if team.name == teamName:
