@@ -2,6 +2,7 @@ Python/__pycache__/*
 PdfPlan/*
 turnier2023WithScores.json
 turnier2023.json
+turnier2023Local.json
 Reports/*
 
 !PdfPlan/template.tex
