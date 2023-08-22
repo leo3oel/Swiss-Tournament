@@ -13,10 +13,10 @@
             "justMyCode": true
         },
         {
-            "name": "Tournament",
+            "name": "SwissTournament",
             "type": "python",
             "request": "launch",
-            "program": "Python/Tournament.py",
+            "program": "Python/SwissTournament.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }

@@ -3,19 +3,18 @@ import datetime
 
 from Tournament import Tournament
 from Games import Game
+from SaveAndRestore import SaveAndRestore
 
 class SwissTournament(Tournament):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, fileName = None):
+        super().__init__(fileName)
         self.teams = self.joinTeamsToOneGroup()
         self.startTimes = self.restored["startTimes"]
         self.endTimes = self.restored["endTimes"]
         self.rounds = self.restored["rounds"]
         self.timePerGame = self.restored["timePerGame"]
         self.breakBetweenRounds = self.restored["breakBetweenRounds"]
-        self.games = self.restored["games"]
-        self.generateGames()
 
     def joinTeamsToOneGroup(self):
         oneGroup = []
@@ -24,11 +23,11 @@ class SwissTournament(Tournament):
         return oneGroup
 
     def generateGames(self):
-        numberOfGamesPerRound = len(self.teams)/2
+        numberOfGamesPerRound = int(len(self.teams)/2)
         sortedTable = self.sortGroups([self.teams])[0]
         if len(self.games) > 0 and self.previousRoundFinished(numberOfGamesPerRound):
             pass
-        else:
+        elif len == 0:
             self.__currentMatches = self.getTeamsToMatch(sortedTable)
             self.__addReferees()
             self.getMatchOrder(self.__currentMatches)
@@ -59,6 +58,7 @@ class SwissTournament(Tournament):
                     ["", ""]
                     )
             )
+            game[2].gamesRefed += 1
             currentDateTime += datetime.timedelta(minutes=(self.timePerGame))
 
     def getTeamsToMatch(self, sortedTable):
@@ -164,7 +164,30 @@ class SwissTournament(Tournament):
                     sortedReferees.remove(ref)
                     break
 
-
+    def saveFile(self):
+        teams = []
+        games = []
+        for team in self.teams:
+            teams.append(team.export())
+        for game in self.games:
+            games.append(game.export())
+        dict = {
+            "teams": teams,
+            "games": games,
+            "startTimes": self.startTimes,
+            "endTimes": self.endTimes,
+            "rounds": self.rounds,
+            "timePerGame": self.timePerGame,
+            "breakBetweenRounds": self.breakBetweenRounds,
+            "days": self.days,
+            "dates": self.dates,
+        }
+        SaveAndRestore.save(self.fileName, dict)
+        
 
 if __name__ == "__main__":
+    import os
     swissTournament = SwissTournament()
+    swissTournament.generateGames()
+    swissTournament.saveFile()
+

@@ -35,6 +35,16 @@ class Player:
             str(self.goals)
         ]
         return(text)
+    
+    def export(self):
+        list = [self.number, 
+                self.name, 
+                self.redCards, 
+                self.greenCards, 
+                self.yellowCards, 
+                self.goals]
+        return list
+
 
 class Team:
 
@@ -104,6 +114,23 @@ class Team:
     def getPlayersList(self):
         self.refreshPlayerList()
         return self.players
+    
+    def getExportPlayers(self):
+        players = self.getPlayersList()
+        return [player.export() for player in players]
+    
+    def export(self):
+        dict = {
+            "name": self.name,
+            "group": self.group,
+            "players": self.getExportPlayers(),
+            "points": self.getPoints(),
+            "goals+": self.getPlusGoals(),
+            "goals-": self.getMinusGoals(),
+            "games" : self.games,
+            "gamesRefed": self.gamesRefed
+        }
+        return dict
 
 if __name__ == "__main__":
     list = [Player(1,"Name", 0,0,0,0), Player(2,"Name", 0,0,0,0)]
