@@ -30,7 +30,7 @@ class DefinedTournament(Tournament):
                         self.teams[game["group"]][game["teamA"]],
                         self.teams[game["group"]][game["teamB"]],
                         self.teams[game["group"]][game["referee"]],
-                        game["score"],
+                        game["score"]
                     )
                 )
         return games

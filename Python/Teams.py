@@ -43,7 +43,7 @@ class Team:
         self.players = [Player(*player, self.name) for player in players]
         self.group = group
         self.games = games
-        self.gamesReded = gamesRefed
+        self.gamesRefed = gamesRefed
 
     def addGame(self, goalsPlus, goalsMinus, playerNumberGoals, playerNumberRedCard, playerNumberYellowCard, playerNumberGreenCard):
         self.games.append([goalsPlus, goalsMinus, playerNumberGoals, playerNumberRedCard, playerNumberYellowCard, playerNumberGreenCard])
