@@ -1,7 +1,8 @@
 class Player:
 
-    def __init__(self, number, name, redCards, greenCards, yellowCards, goals):
+    def __init__(self, number, name, redCards, greenCards, yellowCards, goals, teamName):
         self.name = name
+        self.teamName = teamName
         self.number = number
         self.redCards = redCards
         self.yellowCards = yellowCards
@@ -26,13 +27,23 @@ class Player:
     def addGreenCard(self):
         self.greenCards+=1
 
+    def returnPlayer(self):
+        text = [
+            str(self.number),
+            " ".join(self.name),
+            self.teamName,
+            str(self.goals)
+        ]
+        return(text)
+
 class Team:
 
-    def __init__(self, name, group, players, games):
+    def __init__(self, name, group, players, games, gamesRefed):
         self.name = name
-        self.players = [Player(*player) for player in players]
+        self.players = [Player(*player, self.name) for player in players]
         self.group = group
         self.games = games
+        self.gamesReded = gamesRefed
 
     def addGame(self, goalsPlus, goalsMinus, playerNumberGoals, playerNumberRedCard, playerNumberYellowCard, playerNumberGreenCard):
         self.games.append([goalsPlus, goalsMinus, playerNumberGoals, playerNumberRedCard, playerNumberYellowCard, playerNumberGreenCard])
@@ -92,7 +103,7 @@ class Team:
 
     def getPlayersList(self):
         self.refreshPlayerList()
-        return self.players()
+        return self.players
 
 if __name__ == "__main__":
     list = [Player(1,"Name", 0,0,0,0), Player(2,"Name", 0,0,0,0)]

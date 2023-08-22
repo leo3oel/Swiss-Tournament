@@ -22,7 +22,8 @@ class Tournament:
                 team["name"],
                 team["group"],
                 team["players"],
-                team["games"]
+                team["games"],
+                team["gamesRefed"]
             ))
         return teams
 
@@ -48,17 +49,23 @@ class Tournament:
                 print(team.name + " " + str(team.getPoints()) + " " + str(team.getGoalDiff()) + " " + str(team.getPlusGoals()) + " " + str(team.getMinusGoals()))
             print()
 
-    # def getPlayersWithTeams(self):
-    #     players = []
-    #     for group in self.teams:
-    #         for team in group:
-    #             playerList = [team.name]
-    #             for player in team.players:
-    #                 playerList += player
-    #             players.append(playerList)
-    #     return player
+    def getPlayersWithTeams(self):
+        players = []
+        for group in self.teams:
+            for team in group:
+                playerList = [team.name]
+                for player in team.getPlayersList():
+                    playerList.append(player)
+                players.append(playerList)
+        return players
+    
+    def printPlayersWithTeams(self, playerList):
+        for team in playerList:
+            print("===== " + team[0] + " =====")
+            for playerindex in range(1, len(team)):
+                print(" ".join(team[playerindex].returnPlayer()))
 
 if __name__ == "__main__":
     main = Tournament()
     main.printTable()
-    print(main.getPlayersWithTeams())
+    main.printPlayersWithTeams(main.getPlayersWithTeams())
