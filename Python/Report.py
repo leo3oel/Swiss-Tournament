@@ -1,7 +1,7 @@
 import openpyxl, os, pdfkit
 import pandas as pd
 
-from Tournament import Tournament
+from DefinedTournament import DefinedTournament
 
 class Report:
 
@@ -52,10 +52,9 @@ class GenerateReports:
                 report.generateReport()
             except:
                 print("Error occured stopped at Game Nr. " + str(index+1))
-                os.remove("file.html")
                 break
             
 
 if __name__ == "__main__":
-    tournament = Tournament()
+    tournament = DefinedTournament()
     GenerateReports.generateGroupReports(tournament)

@@ -1,6 +1,6 @@
 import jinja2, os, subprocess
 
-from Tournament import Tournament
+from DefinedTournament import DefinedTournament
 
 class PdfGenerator:
 
@@ -11,7 +11,7 @@ class PdfGenerator:
             self.template = jinja2.Template(file.read())
 
     def generateTexFile(self):
-        tournament = Tournament()
+        tournament = DefinedTournament()
         teamNames = self.__formatGroupsForPrinting(tournament.teams)
         games = self.__formatGamesForPrinting(tournament.games)
         output = self.template.render(teamNames=teamNames, groups=tournament.teams, days=tournament.days, games=games)
@@ -21,7 +21,6 @@ class PdfGenerator:
         os.chdir(os.path.dirname(self.outputPath))
         subprocess.run(["lualatex", self.outputPath])
         subprocess.run(["lualatex", self.outputPath])
-        
         os.chdir(cwd)
         
 
