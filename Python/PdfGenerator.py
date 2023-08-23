@@ -83,8 +83,6 @@ class PdfGenerator:
             day[-1] = day[-1][:postionOfLineBreak]
         return days
 
-
-
 if __name__ == '__main__':
     generator = PdfGenerator()
     generator.generateTexFile()

@@ -55,7 +55,7 @@ class SwissTournament(Tournament):
                 match = []
                 for i in range(2):
                     place = (numberOfGamesPerRound-index)*2-1+i
-                    string = str(place) + " Platz"
+                    string = str(place) + ". Platz"
                     match.append(
                         Team(
                             string,
