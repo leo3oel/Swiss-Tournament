@@ -104,6 +104,7 @@ class SwissTournament(Tournament):
         if len(self.games) <= firstGameOfRound:
             self.games += round
         else:
+            # TODO: Continue here, not working yet. Maybe check older commit
             i = 0
             for gameIndex in range(firstGameOfRound,firstGameOfRound+gamesPerRound):
                 self.games[gameIndex] = round[i]
