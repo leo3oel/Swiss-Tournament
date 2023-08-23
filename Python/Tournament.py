@@ -46,6 +46,7 @@ class Tournament:
             for team in group:
                 if team.name == teamName:
                     return team
+        return EmptyTeam()
                 
     def __getIntermediate(self, game, games, restoredDays, withTeams):
             group = "Z"

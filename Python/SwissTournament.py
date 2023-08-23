@@ -4,7 +4,7 @@ import datetime
 from Tournament import Tournament
 from Games import Game
 from SaveAndRestore import SaveAndRestore
-from Teams import EmptyTeam
+from Teams import Team, EmptyTeam
 from PdfGenerator import PdfGenerator
 
 class SwissTournament(Tournament):
@@ -42,10 +42,38 @@ class SwissTournament(Tournament):
             else:
                 self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
                 self.__addGamesToList(firstGameOfRound)
+        self.__addFinals(numberOfGamesPerRound)
+        self.__addGamesToList((self.rounds+1)*numberOfGamesPerRound)
+    
+    def __addFinals(self, numberOfGamesPerRound):
+        self.__currentMatches = []
+        if self.previousRoundFinished(self.rounds, numberOfGamesPerRound):
+            # TODO: Generate finals if tournament finished
+            pass
+        else:
+            for index in range(numberOfGamesPerRound):
+                match = []
+                for i in range(2):
+                    place = (numberOfGamesPerRound-index)*2-i
+                    string = str(place) + " Platz"
+                    match.append(
+                        Team(
+                            string,
+                            -2,
+                            [],
+                            [],
+                            0
+                        )
+                    )
+                self.__currentMatches.append(match)
 
-    def __addGamesToList(self, firstGameOfRound):
+                    
+    def __addGamesToList(self, firstGameOfRound, finals=False):
         currentDateTime = datetime.datetime.strptime(self.startTimes[0], '%H:%M')
         currentDay = 0
+        group = 0
+        if finals:
+            group = -1
         if len(self.games)>0:
             currentDateTime = datetime.datetime.strptime(self.games[-1].time, '%H:%M')
             currentDateTime += datetime.timedelta(minutes=(self.breakBetweenRounds+self.timePerGame))
@@ -59,7 +87,7 @@ class SwissTournament(Tournament):
                 currentTime = currentDateTime.strftime('%H:%M')
                 self.games.append(
                     Game(
-                        "0",
+                        group,
                         currentTime,
                         currentDay,
                         game[0],
