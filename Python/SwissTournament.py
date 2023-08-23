@@ -82,7 +82,11 @@ class SwissTournament(Tournament):
         if finals:
             group = -1
         round = []
-        for game in self.__currentMatches:
+        for index, game in enumerate(self.__currentMatches):
+            if len(self.games)>0 and index == 0:
+                currentDateTime = datetime.datetime.strptime(self.games[-1].time, '%H:%M')
+                currentDateTime += datetime.timedelta(minutes=(self.breakBetweenRounds+self.timePerGame))
+                currentDay = self.games[-1].day
             if len(self.endTimes) > currentDay:
                 if currentDateTime > datetime.datetime.strptime(self.endTimes[currentDay], '%H:%M'):
                     currentDay += 1
@@ -104,7 +108,6 @@ class SwissTournament(Tournament):
         if len(self.games) <= firstGameOfRound:
             self.games += round
         else:
-            # TODO: Continue here, not working yet. Maybe check older commit
             i = 0
             for gameIndex in range(firstGameOfRound,firstGameOfRound+gamesPerRound):
                 self.games[gameIndex] = round[i]
@@ -196,6 +199,7 @@ class SwissTournament(Tournament):
         return matches
 
     def updateOrder(self, list, frame, root):
+        # TODO: Check order
         list = sorted(list, key=lambda x: x[-1].get())
         self.__currentMatches = [match[:-1] for match in list]
         self.__addReferees()
