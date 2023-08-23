@@ -54,7 +54,7 @@ class SwissTournament(Tournament):
             for index in range(numberOfGamesPerRound):
                 match = []
                 for i in range(2):
-                    place = (numberOfGamesPerRound-index)*2-i
+                    place = (numberOfGamesPerRound-index)*2-1+i
                     string = str(place) + " Platz"
                     match.append(
                         Team(
@@ -66,6 +66,14 @@ class SwissTournament(Tournament):
                         )
                     )
                 self.__currentMatches.append(match)
+        self.__getRefereesForFinals()
+
+    def __getRefereesForFinals(self):
+        for index, match in enumerate(self.__currentMatches):
+            if index < 2:
+                match.append(self.__currentMatches[-2+index][1])
+            else:
+                match.append(self.__currentMatches[index-2][0])
 
                     
     def __addGamesToList(self, firstGameOfRound, finals=False):
