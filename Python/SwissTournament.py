@@ -38,12 +38,12 @@ class SwissTournament(Tournament):
                 self.__currentMatches = self.getTeamsToMatch(sortedTable)
                 self.__addReferees()
                 self.getMatchOrder(self.__currentMatches)
-                self.__addGamesToList(firstGameOfRound)
+                self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
             else:
                 self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
-                self.__addGamesToList(firstGameOfRound)
+                self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
         self.__addFinals(numberOfGamesPerRound)
-        self.__addGamesToList((self.rounds+1)*numberOfGamesPerRound)
+        self.__addGamesToList((self.rounds+1)*numberOfGamesPerRound, numberOfGamesPerRound)
     
     def __addFinals(self, numberOfGamesPerRound):
         self.__currentMatches = []
@@ -75,40 +75,39 @@ class SwissTournament(Tournament):
             else:
                 match.append(self.__currentMatches[index-2][0])
 
-                    
-    def __addGamesToList(self, firstGameOfRound, finals=False):
+    def __addGamesToList(self, firstGameOfRound, gamesPerRound, finals=False):
         currentDateTime = datetime.datetime.strptime(self.startTimes[0], '%H:%M')
         currentDay = 0
         group = 0
         if finals:
             group = -1
-        if len(self.games)>0:
-            currentDateTime = datetime.datetime.strptime(self.games[-1].time, '%H:%M')
-            currentDateTime += datetime.timedelta(minutes=(self.breakBetweenRounds+self.timePerGame))
-            currentDay = self.games[-1].day
+        round = []
+        for game in self.__currentMatches:
+            if len(self.endTimes) > currentDay:
+                if currentDateTime > datetime.datetime.strptime(self.endTimes[currentDay], '%H:%M'):
+                    currentDay += 1
+                    currentDateTime = datetime.datetime.strptime(self.startTimes[currentDay], '%H:%M')
+            currentTime = currentDateTime.strftime('%H:%M')
+            round.append(
+                Game(
+                    group,
+                    currentTime,
+                    currentDay,
+                    game[0],
+                    game[1],
+                    game[2],
+                    ["", ""]
+                    )
+            )
+            game[2].gamesRefed += 1
+            currentDateTime += datetime.timedelta(minutes=(self.timePerGame))
         if len(self.games) <= firstGameOfRound:
-            for game in self.__currentMatches:
-                if len(self.endTimes) > currentDay:
-                    if currentDateTime > datetime.datetime.strptime(self.endTimes[currentDay], '%H:%M'):
-                        currentDay += 1
-                        currentDateTime = datetime.datetime.strptime(self.startTimes[currentDay], '%H:%M')
-                currentTime = currentDateTime.strftime('%H:%M')
-                self.games.append(
-                    Game(
-                        group,
-                        currentTime,
-                        currentDay,
-                        game[0],
-                        game[1],
-                        game[2],
-                        ["", ""]
-                        )
-                )
-                game[2].gamesRefed += 1
-                currentDateTime += datetime.timedelta(minutes=(self.timePerGame))
+            self.games += round
         else:
-            pass
-            # TODO: Modify games List insetad of appending it
+            i = 0
+            for gameIndex in range(firstGameOfRound,firstGameOfRound+gamesPerRound):
+                self.games[gameIndex] = round[i]
+                i += 1
 
     def getTeamsToMatch(self, sortedTable, emptyMode=False):
         matches = []
