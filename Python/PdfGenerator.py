@@ -4,11 +4,12 @@ from DefinedTournament import DefinedTournament
 
 class PdfGenerator:
 
-    def __init__(self, tournament, swiss):
+    def __init__(self, tournament, swiss, gamesPerRound=1):
         self.templatePath = os.path.join(os.getcwd(), "PdfPlan", "template.tex")
         self.outputPath = os.path.join(os.getcwd(), "PdfPlan", "spielplan.tex")
         self.tournament = tournament
         self.swiss = swiss
+        self.gamesPerRound = gamesPerRound
         with open(self.templatePath) as file:
             self.template = jinja2.Template(file.read())
 
@@ -74,9 +75,12 @@ class PdfGenerator:
             else:
                 formatedString += game.referee.name
             formatedString += r'\\'
+            if self.swiss and gameNumber%self.gamesPerRound == 0:
+                formatedString += r'\hline'
             days[game.day].append(formatedString)
         for day in days:
-            day[-1] = day[-1][:-2]
+            postionOfLineBreak = day[-1].index(r'\\')
+            day[-1] = day[-1][:postionOfLineBreak]
         return days
 
 

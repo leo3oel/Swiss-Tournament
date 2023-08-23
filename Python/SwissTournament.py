@@ -244,7 +244,8 @@ class SwissTournament(Tournament):
         SaveAndRestore.save(self.fileName, dict)
         
     def generatePdf(self):
-        generator = PdfGenerator(self, True)
+        gamesPerRound = int(len(self.teams)/2)
+        generator = PdfGenerator(self, True, gamesPerRound)
         generator.generateTexFile()
 
 if __name__ == "__main__":
