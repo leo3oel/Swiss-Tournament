@@ -143,8 +143,8 @@ class Tournament:
                 team["numberOfWins"],
                 team["numberOfLosses"],
                 team["numberOfTies"],
-                team["goalsPlus"],
-                team["goalsMinus"],
+                team["goals+"],
+                team["goals-"],
                 team["gamesRefed"]
             ))
         return teams
