@@ -13,18 +13,23 @@ class GamesWindow:
     def __init__(self):
         pass
 
-class TableWindow(tk.Tk):
+class TableWindow(tk.Toplevel):
 
-    def __init__(self, tournament):
-        tk.Tk.__init__(self)
-        self.title = "Tournament Table"
+    def __init__(self, master, tournament):
+        tk.Toplevel.__init__(self, master)
+        self.title("Tournament Table")
         self.__tableFrame = tk.Frame(self)
-        self.__createWindow()
-        self.mainloop()
+        self.tournament = tournament
 
-    def refreshTable(self):
+    def refreshTable(self, sortedTeams):
         self.__tableFrame.destroy()
         self.__tableFrame = tk.Frame(self)
+        self.__tableFrame.grid( row=0, column=0)
+        row = 0
+        for team in sortedTeams:
+            row += 1
+            teamName = tk.Label(self.__tableFrame, text=team.name)
+            teamName.grid(row=row, column=0)
 
 class EntryWindow(tk.Tk):
 
@@ -34,6 +39,7 @@ class EntryWindow(tk.Tk):
         self.__gameNumber = 0
         self.__tournament = tournament
         self.__currentGameFrame = tk.Frame(self)
+        self.__tableWindow = TableWindow(self, self.__tournament)
         self.__createWindow()
         self.mainloop()
 
@@ -43,6 +49,8 @@ class EntryWindow(tk.Tk):
             game = gamesOfRound[self.__gameNumber]
             scoreA = game.score[0]
             scoreB = game.score[1]
+        sortedTeams = self.__tournament.sortGroups([self.__tournament.teams])[0]
+        self.__tableWindow.refreshTable(sortedTeams)
         self.__currentGameFrame.destroy()
         self.__currentGameFrame = tk.Frame(self)
         self.__currentGameFrame.grid(row=0, column=0, columnspan=4)
