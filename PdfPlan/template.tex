@@ -15,7 +15,7 @@
 %\usepackage{pgf, tikz} %Tikz GRAPHICS
 
 %Seitenlayout, Margins verkleinern
-\usepackage[a4paper, top=2.5cm,bottom=30mm, left=3cm, right=3cm]{geometry} 
+\usepackage[a4paper, top=1.7cm,bottom=8mm, left=2cm, right=2cm]{geometry} 
 \usepackage{setspace}%Zeilenabstand verändern zB \onehalfspacing(Präambel)
 
 %Mathe, Grafiken
@@ -44,33 +44,35 @@
 \usepackage{titlesec}
 \titleformat*{\section}{\large\bfseries}
 
-
 %Titel
 \title{Spielplan: 2. Kanupoloturnier}
 \date{}
 \author{}
 %Dokument
 \begin{document}
-\maketitle
+\begin{center}
+    \textbf{\Large{2. Würzburg Kanupoloturnier}\\\vspace{.2cm}
+    \large{Spielplan}}
+\end{center}
 \thispagestyle{fancy}
-\section*{Die Teams}
-    \begin{table}[H]
-        \centering
-        \begin{tabular}{|{%- for group in groups -%}
-            l|
-            {%- endfor -%}
-            }
-        {%- for line in teamNames %}
-            {{ line }}
-        {%- endfor %}
-        \end{tabular}
-    \end{table}
+% \section*{Die Teams}
+%     \begin{table}[H]
+%         \centering
+%         \begin{tabular}{|{%- for group in groups -%}
+%             l|
+%             {%- endfor -%}
+%             }
+%         {%- for line in teamNames %}
+%             {{ line }}
+%         {%- endfor %}
+%         \end{tabular}
+%     \end{table}
 {%- for day in days %}
-\section*{ {{ day }} }
+\subsection*{ {{ day }} }
     \begin{table}[H]
         \centering
-        \begin{tabular}{l|l|l|l|lcl|l|l}
-            Nr & Zeit & Gr. & Team A & \multicolumn{3}{|c|}{Ergebnis} & Team B & Schiedsrichter \\\hline\hline
+        \begin{tabular}{r{% if not swiss %}|c {% endif %}|c|c|ccc|c|c}
+            Nr & Zeit {% if not swiss %}& Gr. {% endif %} & Team A & \multicolumn{3}{|c|}{Ergebnis} & Team B & Schiedsrichter \\\hline\hline
             {%- for game in games[loop.index-1] %}
             {{ game }}
             {%- endfor %}

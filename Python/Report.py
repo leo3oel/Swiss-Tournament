@@ -1,5 +1,7 @@
-import openpyxl, os, pdfkit
-import pandas as pd
+"""
+Adds Teamnames, times and gamenumber to GameReport
+"""
+import openpyxl, os
 
 from DefinedTournament import DefinedTournament
 
@@ -16,7 +18,6 @@ class Report:
         filename = "report_Game-" + str(number) + ".xslx"
         pdfFileName = "report_Game-" + str(number) + ".pdf"
         self.__outputPath = os.path.join(os.path.dirname(templatePath), filename)
-        self.__outputPathPdf = os.path.join(os.path.dirname(templatePath), pdfFileName)
 
     def generateReport(self):
         template = openpyxl.load_workbook(self.__templatePath)

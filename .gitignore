@@ -4,6 +4,7 @@ turnier2023WithScores.json
 turnier2023.json
 turnier2023Local.json
 Reports/*
+*.json
 
 !PdfPlan/template.tex
 !PdfPlan/kcwlogo.png
