@@ -18,6 +18,7 @@ class SwissTournament(Tournament):
         self.timePerGame = self.restored["timePerGame"]
         self.breakBetweenRounds = self.restored["breakBetweenRounds"]
         self.emptyTeam = EmptyTeam()
+        self.currentRound = self.restored["currentRound"]
 
     def joinTeamsToOneGroup(self):
         oneGroup = []
@@ -28,16 +29,12 @@ class SwissTournament(Tournament):
     def generateGames(self):
         numberOfGamesPerRound = int(len(self.teams)/2)
         sortedTable = self.sortGroups([self.teams])[0]
-        # if len(self.games) > 0 and self.previousRoundFinished(numberOfGamesPerRound):
-        #     pass
-        # elif len(self.games) == 0:
-        #     pass
         for roundNumber in range(0, self.rounds):
             firstGameOfRound = roundNumber*numberOfGamesPerRound
             if self.previousRoundFinished(roundNumber, numberOfGamesPerRound) or roundNumber == 0:
                 self.__currentMatches = self.getTeamsToMatch(sortedTable)
                 self.__addReferees()
-                self.getMatchOrder(self.__currentMatches)
+                self.getMatchOrder()
                 self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
             else:
                 self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
@@ -149,18 +146,19 @@ class SwissTournament(Tournament):
             return False
         return True
     
-    def getMatchOrder(self, teamsToMatch):
+    def getMatchOrder(self):
         root = tk.Tk()
         root.title("List Reorder")
-        self.displayList(root, teamsToMatch)
+        self.displayList(root)
         root.mainloop() 
 
-    def displayList(self, root, matches, frame=None):
+    def displayList(self, root, frame=None):
         # TODO: Clean this up
         if frame:    
             frame.destroy()
         frame = tk.Frame(root)
         frame.pack(fill="both", expand=True)
+        matches = self.__currentMatches
         for index, teams in enumerate(matches):
             if len(teams)<4:
                 teams.append("")
@@ -196,14 +194,13 @@ class SwissTournament(Tournament):
         reorderButton.grid(
             column=1, row=200, padx=5, pady=10
         )
-        return matches
 
     def updateOrder(self, list, frame, root):
-        # TODO: Check order
         list = sorted(list, key=lambda x: x[-1].get())
-        self.__currentMatches = [match[:-1] for match in list]
+        matches = [match[:-1] for match in list]
+        self.__currentMatches = matches
         self.__addReferees()
-        self.displayList(root, list, frame)
+        self.displayList(root, frame)   
 
     def __addReferees(self):
         sortedReferees = sorted(self.teams, key=lambda team: team.gamesRefed)
@@ -244,6 +241,7 @@ class SwissTournament(Tournament):
             "breakBetweenRounds": self.breakBetweenRounds,
             "days": self.days,
             "dates": self.dates,
+            "currentRound": self.currentRound
         }
         SaveAndRestore.save(self.fileName, dict)
         
