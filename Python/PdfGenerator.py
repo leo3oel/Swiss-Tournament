@@ -60,7 +60,7 @@ class PdfGenerator:
                 formatedString += game.teamA + " & "
             else:
                 formatedString += game.teamA.name + " & "
-            if type(game.score[0]) is int:
+            if game.score[0] != -1:
                 formatedString += str(game.score[0]) + " & "
                 formatedString += ":" + " & "
                 formatedString += str(game.score[1]) + " & "

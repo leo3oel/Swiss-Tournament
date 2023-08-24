@@ -19,6 +19,14 @@
             "program": "Python/SwissTournament.py",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "Gui",
+            "type": "python",
+            "request": "launch",
+            "program": "Python/Gui.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }

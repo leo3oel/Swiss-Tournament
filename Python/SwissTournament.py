@@ -23,6 +23,7 @@ class SwissTournament(Tournament):
         self.breakBetweenRounds = self.restored["breakBetweenRounds"]
         self.emptyTeam = EmptyTeam()
         self.currentRound = self.restored["currentRound"]
+        self.gamesPerRound = int(len(self.teams)/2)
 
     def joinTeamsToOneGroup(self):
         oneGroup = []
@@ -31,7 +32,7 @@ class SwissTournament(Tournament):
         return oneGroup
 
     def generateGames(self):
-        numberOfGamesPerRound = int(len(self.teams)/2)
+        numberOfGamesPerRound = self.gamesPerRound
         sortedTable = self.sortGroups([self.teams])[0]
         for roundNumber in range(0, self.rounds):
             firstGameOfRound = roundNumber*numberOfGamesPerRound
@@ -62,7 +63,11 @@ class SwissTournament(Tournament):
                             string,
                             -2,
                             [],
-                            [],
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
                             0
                         )
                     )
@@ -101,7 +106,8 @@ class SwissTournament(Tournament):
                     game[0],
                     game[1],
                     game[2],
-                    ["", ""]
+                    [-1, -1],
+                    [[], []]
                     )
             )
             game[2].gamesRefed += 1
@@ -143,12 +149,10 @@ class SwissTournament(Tournament):
     
     def previousRoundFinished(self, roundNumber, numberOfGamesPerRound):
         lastGamePreviousRound = roundNumber*numberOfGamesPerRound-1
-        try:
-            if type(self.games[lastGamePreviousRound].score[0]) is not int:
-                return False
-        except:
-            return False
-        return True
+        if lastGamePreviousRound > 0:
+            if self.games[lastGamePreviousRound].score[0] != -1:
+                return True
+        return False
     
     def getMatchOrder(self):
         root = tk.Tk()
@@ -228,6 +232,13 @@ class SwissTournament(Tournament):
                     sortedReferees.remove(ref)
                     break
 
+    def generateGamesOfRound(self, roundNumber):
+        gamesPerRound = self.gamesPerRound
+        games = []
+        for gameIndex in range(gamesPerRound*roundNumber, gamesPerRound*(roundNumber+1)):
+            games.append(self.games[gameIndex])
+        return games
+
     def saveFile(self):
         teams = []
         games = []
@@ -250,7 +261,7 @@ class SwissTournament(Tournament):
         SaveAndRestore.save(self.fileName, dict)
         
     def generatePdf(self):
-        gamesPerRound = int(len(self.teams)/2)
+        gamesPerRound = self.gamesPerRound
         generator = PdfGenerator(self, True, gamesPerRound)
         generator.generateTexFile()
 

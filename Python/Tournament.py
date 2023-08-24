@@ -37,7 +37,8 @@ class Tournament:
                         self.__getTeamFromTeamName(game["teamA"]),
                         self.__getTeamFromTeamName(game["teamB"]),
                         self.__getTeamFromTeamName(game["referee"]),
-                        game["score"]
+                        game["score"],
+                        game["scorer"]
                     )
                 )
         return games
@@ -64,6 +65,7 @@ class Tournament:
                         sortedGroups[game["teamB"][0]][game["teamB"][1]],
                         sortedGroups[game["referee"][0]][game["referee"][1]],
                         game["score"],
+                        game["scorer"]
                     )
                 )
             else:
@@ -82,6 +84,7 @@ class Tournament:
                         stringTeamB,
                         stringTeamRef,
                         game["score"],
+                        game["scorer"]
                     )
                 )
 
@@ -101,6 +104,7 @@ class Tournament:
                     sortedGroup[game["teamB"]],
                     sortedGroup[game["referee"]],
                     game["score"],
+                    game["scorer"]
                 )
             )
         else:
@@ -116,6 +120,7 @@ class Tournament:
                     teamBStr,
                     refereeStr,
                     game["score"],
+                    game["scorer"]
                 )
             )
 
@@ -135,7 +140,11 @@ class Tournament:
                 team["name"],
                 team["group"],
                 team["players"],
-                team["games"],
+                team["numberOfWins"],
+                team["numberOfLosses"],
+                team["numberOfTies"],
+                team["goalsPlus"],
+                team["goalsMinus"],
                 team["gamesRefed"]
             ))
         return teams

@@ -52,71 +52,41 @@ class Player:
 
 class Team:
 
-    def __init__(self, name, group, players, games, gamesRefed):
+    def __init__(self, name, group, players, numberOfWins, numberOfLosses, numberOfTies, goalsPlus, goalsMinus, gamesRefed):
         self.name = name
         self.players = [Player(*player, self.name) for player in players]
         self.group = group
-        self.games = games
+        self.numberOfWins = numberOfWins
+        self.numberOfLosses = numberOfLosses
+        self.numberOfTies = numberOfTies
+        self.goalsPlus = goalsPlus
+        self.goalsMinus = goalsMinus
         self.gamesRefed = gamesRefed
-
-    def addGame(self, goalsPlus, goalsMinus, playerNumberGoals, playerNumberRedCard, playerNumberYellowCard, playerNumberGreenCard):
-        self.games.append([goalsPlus, goalsMinus, playerNumberGoals, playerNumberRedCard, playerNumberYellowCard, playerNumberGreenCard])
-
-    def changeGame(self, gameNumber, goalsPlus, goalsMinus, playerNumberGoals, playerNumberRedCard, playerNumberYellowCard, playerNumberGreenCard):
-        self.games[gameNumber] = [goalsPlus, goalsMinus, playerNumberGoals, playerNumberRedCard, playerNumberYellowCard, playerNumberGreenCard]
 
     def getPoints(self):
         points = 0
-        for game in self.games:
-            if game[0] > game[1]:
-                points += 3
-            elif game[0] == game[1]:
-                points += 1
+        points += self.numberOfTies*1
+        points += self.numberOfWins*1
         return points
     
     def getPlusGoals(self):
-        plusGoals = 0
-        for game in self.games:
-            plusGoals += game[0]
-        return plusGoals
+        return self.goalsPlus
     
     def getMinusGoals(self):
-        minusGoals = 0
-        for game in self.games:
-            minusGoals += game[1]
-        return minusGoals
+        return self.goalsMinus
     
     def getGoalDiff(self):
         return self.getPlusGoals() - self.getMinusGoals()
-            
-    def refreshPlayerList(self):
-        for player in self.players:
-            player.setToZero()
-        for game in self.games:
-            for playerNumber in game[2]:
-                self.checkIfPlayerExists(playerNumber)
-                selectedPlayer = next(player for player in self.players if player.number==playerNumber)
-                selectedPlayer.addGoal()
-            for playerNumber in game[3]:
-                self.checkIfPlayerExists(playerNumber)
-                selectedPlayer = next(player for player in self.players if player.number==playerNumber)
-                selectedPlayer.addRedCard()
-            for playerNumber in game[4]:
-                self.checkIfPlayerExists(playerNumber)
-                selectedPlayer = next(player for player in self.players if player.number==playerNumber)
-                selectedPlayer.addYellowCard()
-            for playerNumber in game[4]:
-                self.checkIfPlayerExists(playerNumber)
-                selectedPlayer = next(player for player in self.players if player.number==playerNumber)
-                selectedPlayer.addGreenCard()
-                
+    
+    def getNumberOfGames(self):
+        return self.numberOfLosses + self.numberOfTies + self.numberOfWins
+
     def checkIfPlayerExists(self, playerNumber):
         playerNumberList = [player.number for player in self.players]
         if playerNumber not in playerNumberList:
             self.players.append(Player(playerNumber, "Unknown", 0, 0, 0, 0))
 
     def getPlayersList(self):
-        self.refreshPlayerList()
         return self.players
     
     def getExportPlayers(self):
@@ -128,10 +98,11 @@ class Team:
             "name": self.name,
             "group": self.group,
             "players": self.getExportPlayers(),
-            "points": self.getPoints(),
+            "numberOfWins": self.numberOfWins,
+            "numberOfLosses": self.numberOfLosses,
+            "numberOfTies": self.numberOfTies,
             "goals+": self.getPlusGoals(),
             "goals-": self.getMinusGoals(),
-            "games" : self.games,
             "gamesRefed": self.gamesRefed
         }
         return dict
@@ -139,9 +110,5 @@ class Team:
 class EmptyTeam(Team):
 
     def __init__(self):
-        super().__init__("", -5, [], [], 0)
+        super().__init__("", -5, [], [], 0, 0, 0, 0, 0)
 
-if __name__ == "__main__":
-    list = [Player(1,"Name", 0,0,0,0), Player(2,"Name", 0,0,0,0)]
-    playerNumberList = [player.number for player in list]
-    print(playerNumberList)
