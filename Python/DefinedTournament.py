@@ -1,7 +1,7 @@
 """
 Tournament Games will be read from List
 Use this for Group Tournaments, etc
-WIP
+Continue this later
 """
 from Tournament import Tournament
 from Games import Game

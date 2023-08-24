@@ -1,3 +1,7 @@
+"""
+Swiss Tournament, works for 6 Teams or more (equal number)
+Generates matches, referees for matches
+"""
 import tkinter as tk
 import datetime
 

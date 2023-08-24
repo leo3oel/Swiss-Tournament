@@ -1,3 +1,8 @@
+"""
+Graphical Interface;
+Also main Program to start a Tournament
+Currently only starts SwissTournament
+"""
 import tkinter as tk
 
 from SwissTournament import SwissTournament

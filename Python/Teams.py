@@ -1,3 +1,7 @@
+"""
+Create Teams, each team consists from players
+Saves Player scores
+"""
 class Player:
 
     def __init__(self, number, name, redCards, greenCards, yellowCards, goals, teamName):

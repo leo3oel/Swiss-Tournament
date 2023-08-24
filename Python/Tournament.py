@@ -1,3 +1,6 @@
+"""
+General Methods required for a tournament
+"""
 from tkinter import filedialog
 
 from SaveAndRestore import SaveAndRestore

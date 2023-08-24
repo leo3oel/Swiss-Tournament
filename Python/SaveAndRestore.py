@@ -1,3 +1,6 @@
+"""
+Export and import tournament state to/from .json
+"""
 import json
 from tkinter import messagebox as msgbox
 

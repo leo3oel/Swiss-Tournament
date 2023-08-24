@@ -1,6 +1,7 @@
+"""
+Generates LaTeX file of current Tournametn
+"""
 import jinja2, os, subprocess
-
-from DefinedTournament import DefinedTournament
 
 class PdfGenerator:
 
@@ -24,7 +25,6 @@ class PdfGenerator:
         subprocess.run(["lualatex", self.outputPath])
         subprocess.run(["lualatex", self.outputPath])
         os.chdir(cwd)
-        
 
     def __formatGroupsForPrinting(self, teams):
         teamNames = []

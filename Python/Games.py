@@ -1,3 +1,7 @@
+"""
+A Game of the Tournament
+"""
+
 class Game:
 
     def __init__(self, group, time, day, teamA, teamB, referee, score):
