@@ -15,7 +15,7 @@
 %\usepackage{pgf, tikz} %Tikz GRAPHICS
 
 %Seitenlayout, Margins verkleinern
-\usepackage[a4paper, top=2cm,bottom=15mm, left=2cm, right=2cm]{geometry} 
+\usepackage[a4paper, top=1.7cm,bottom=8mm, left=2cm, right=2cm]{geometry} 
 \usepackage{setspace}%Zeilenabstand verändern zB \onehalfspacing(Präambel)
 
 %Mathe, Grafiken
@@ -51,7 +51,7 @@
 %Dokument
 \begin{document}
 \begin{center}
-    \textbf{\Large{2. Würzburg Kanupoloturnier}\\\vspace{.5cm}
+    \textbf{\Large{2. Würzburg Kanupoloturnier}\\\vspace{.2cm}
     \large{Spielplan}}
 \end{center}
 \thispagestyle{fancy}
@@ -68,10 +68,10 @@
 %         \end{tabular}
 %     \end{table}
 {%- for day in days %}
-\section*{ {{ day }} }
+\subsection*{ {{ day }} }
     \begin{table}[H]
         \centering
-        \begin{tabular}{l{% if not swiss %}|l {% endif %}|l|l|lcl|l|l}
+        \begin{tabular}{r{% if not swiss %}|c {% endif %}|c|c|ccc|c|c}
             Nr & Zeit {% if not swiss %}& Gr. {% endif %} & Team A & \multicolumn{3}{|c|}{Ergebnis} & Team B & Schiedsrichter \\\hline\hline
             {%- for game in games[loop.index-1] %}
             {{ game }}

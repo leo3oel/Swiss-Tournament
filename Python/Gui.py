@@ -28,11 +28,10 @@ class TableWindow(tk.Tk):
 
 class EntryWindow(tk.Tk):
 
-    __gameNumber = 0
-
     def __init__(self, tournament):
         tk.Tk.__init__(self)
-        self.title = "Game Entry"
+        self.title("Game Entry")
+        self.__gameNumber = 0
         self.__tournament = tournament
         self.__currentGameFrame = tk.Frame(self)
         self.__createWindow()
@@ -82,13 +81,13 @@ class EntryWindow(tk.Tk):
         if scoreA == -1 or scoreB == -1:
             deleteGoalTeamABtn.grid_remove()
             deleteGoalTeamBBtn.grid_remove()
-        previousGameBt = tk.Button(self, text="Previous Game", command=lambda: self.__changeGame(-1))
+        previousGameBt = tk.Button(self, text="Previous Game", command=lambda: self.__changeGame(-1, game, scoreA, scoreB, teamAEntrys, teamBEntrys))
         previousGameBt.grid(row=1,column=0, padx=5, pady=5)
         createPdf = tk.Button(self, text="Create PDF", command=self.__createPDF)
         createPdf.grid(row=1,column=1, padx=5, pady=5)
         saveGameBt = tk.Button(self, text="Save Game", command=lambda: self.__saveGame(game, scoreA, scoreB, teamAEntrys, teamBEntrys))
         saveGameBt.grid(row=1,column=2, padx=5, pady=5)
-        nextGameBt = tk.Button(self, text="Next Game", command=lambda: self.__changeGame(1))
+        nextGameBt = tk.Button(self, text="Next Game", command=lambda: self.__changeGame(1, game, scoreA, scoreB, teamAEntrys, teamBEntrys))
         nextGameBt.grid(row=1,column=3, padx=5, pady=5)
         
     def __createPlayerNumberEntry(self, score, scorer, column):
@@ -122,21 +121,59 @@ class EntryWindow(tk.Tk):
         scores[team] -= 1
         self.__createWindow(*scores)
 
-    def __changeGame(self, relativIndex):
+    def __changeGame(self, relativIndex, game, scoreA, scoreB, teamAEntrys, teamBEntrys):
+        returnValue = self.__saveGame(game, scoreA, scoreB, teamAEntrys, teamBEntrys)
+        if returnValue < 0:
+            if msgbx.askyesno("Switch without Saving", "Switch without Saving"):
+                pass
+            else:
+                return -1
         self.__gameNumber += relativIndex
         if self.__gameNumber<0:
             self.__gameNumber = 0
         if self.__gameNumber>=self.__tournament.gamesPerRound:
-            self.__gameNumber = self.__tournament.gamesPerRound-1
+            if msgbx.askyesno("Generate next Round", "Are you sure you want to generate next round?\n" + 
+                              "Input for this Round cannot be edited afterwards."
+                              ):
+                self.__gameNumber = 0
+                self.__tournament.currentRound += 1
+                self.__tournament.generateGames(self)
+            else:
+                self.__gameNumber = self.__tournament.gamesPerRound-1
         self.__createWindow()
 
     def __saveGame(self, game, scoreA, scoreB, scorerA, scorerB):
         if not self.__checkIfParametersAreComplete(game, scoreA, scoreB, scorerA, scorerB):
             msgbx.showerror("Arguments missing", "Some values are empty")
-            return 0
-        if game.score[0] != -1:
+            return -1
+        if game.score[0] >= 0:
             self.__resetGame(game)
+        game = self.__setNewValuesForGame(game, scoreA, scoreB, scorerA, scorerB)
+        self.__saveToList(game)
         self.__tournament.saveFile()
+        return 1
+
+    def __setNewValuesForGame(self, game, scoreA, scoreB, scorerA, scorerB):
+        game.score = [scoreA, scoreB]
+        game.teamA.goalsPlus += scoreA
+        game.teamA.goalsMinus += scoreB
+        game.teamB.goalsPlus += scoreB
+        game.teamB.goalsMinus += scoreA
+        scorerANumbers = [int(scorer.get()) for scorer in scorerA]
+        scorerBNumbers = [int(scorer.get()) for scorer in scorerB]
+        game.scorer = [scorerANumbers, scorerBNumbers]
+        for scorer in scorerA:
+            self.__incrementScorer(game.teamA, int(scorer.get()))
+        for scorer in scorerB:
+            self.__incrementScorer(game.teamB, int(scorer.get()))
+        self.__changeGameNumbersOfTeam(game, +1)
+        game.referee.gamesRefed += 1
+        return game
+
+    def __saveToList(self, game):
+        for index, gameInList in enumerate(self.__tournament.games):
+            if gameInList.time == game.time and gameInList.day == game.day:
+                gameInList = game
 
     def __checkIfParametersAreComplete(self, game, scoreA, scoreB, scorerA, scorerB):
         if not game:
@@ -155,9 +192,43 @@ class EntryWindow(tk.Tk):
                 return False
         return True
 
-    def __resetGame(game):
-        # TODO : remove score, remove games from team (numberoflosses), remove game from players (scorer)
-        pass
+    def __resetGame(self, game):
+        self.__changeGameNumbersOfTeam(game, -1)
+        game.teamA.goalsPlus -= (game.score[0])
+        game.teamA.goalsMinus -= (game.score[1])
+        game.teamB.goalsPlus -= (game.score[1])
+        game.teamB.goalsMinus -= (game.score[0])
+        for scorer in game.scorer[0]:
+            self.__decrementScorer(game.teamA, scorer)
+        for scorer in game.scorer[1]:
+            self.__decrementScorer(game.teamB, scorer)
+        refTeam = game.referee
+        refTeam.gamesRefed -= 1
+
+    def __changeGameNumbersOfTeam(self, game, value):
+        if game.score[0] == game.score[1]:
+            self.__changeGameNumberForType(game.teamA, "tie", value)
+            self.__changeGameNumberForType(game.teamB, "tie", value)
+        elif game.score[0] > game.score[1]:
+            self.__changeGameNumberForType(game.teamA, "won", value)
+            self.__changeGameNumberForType(game.teamB, "loss", value)
+        elif game.score[0] < game.score[1]:
+            self.__changeGameNumberForType(game.teamA, "loss", value)
+            self.__changeGameNumberForType(game.teamB, "won", value)
+
+    def __changeGameNumberForType(self, team, type, value):
+        if type == "loss":
+            team.numberOfLosses += value
+        if type == "tie":
+            team.numberOfTies += value
+        if type == "won":
+            team.numberOfWins += value
+
+    def __incrementScorer(self, team, scorer):
+        team.incrementGoalCountOfPlayer(scorer, 1)
+
+    def __decrementScorer(self, team, scorer):
+        team.incrementGoalCountOfPlayer(scorer, -1)
 
     def __createPDF(self):
         self.__tournament.generatePdf()

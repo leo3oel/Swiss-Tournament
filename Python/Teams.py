@@ -19,8 +19,8 @@ class Player:
         self.greenCards = 0
         self.goals = 0
 
-    def addGoal(self):
-        self.goals+=1
+    def incrementGoals(self, value):
+        self.goals += value
 
     def addRedCard(self):
         self.redCards+=1
@@ -66,7 +66,7 @@ class Team:
     def getPoints(self):
         points = 0
         points += self.numberOfTies*1
-        points += self.numberOfWins*1
+        points += self.numberOfWins*3
         return points
     
     def getPlusGoals(self):
@@ -80,11 +80,27 @@ class Team:
     
     def getNumberOfGames(self):
         return self.numberOfLosses + self.numberOfTies + self.numberOfWins
+    
+    def incrementGoalCountOfPlayer(self, playerNumber, value):
+        if self.checkIfPlayerExists(playerNumber):
+            for player in self.players:
+                if playerNumber == player.number:
+                    player.incrementGoals(value)
+                    break
+        else:
+            self.players.append(Player(playerNumber, 
+                                       "Unknown",
+                                       0,
+                                       0,
+                                       0,
+                                       value,
+                                       self.name))
 
     def checkIfPlayerExists(self, playerNumber):
         playerNumberList = [player.number for player in self.players]
         if playerNumber not in playerNumberList:
-            self.players.append(Player(playerNumber, "Unknown", 0, 0, 0, 0))
+            return False
+        return True
 
     def getPlayersList(self):
         return self.players

@@ -11,6 +11,87 @@ from SaveAndRestore import SaveAndRestore
 from Teams import Team, EmptyTeam
 from PdfGenerator import PdfGenerator
 
+class MatchGui(tk.Toplevel):
+
+    def __init__(self, master, tournament, currentMatches):
+        tk.Toplevel.__init__(self, master)
+        self.tournament = tournament
+        self.currentMatches = currentMatches
+        self.title("List Reorder")
+        self.displayList()
+
+    def displayList(self, frame=None):
+        # TODO: Clean this up
+        if frame:    
+            frame.destroy()
+        frame = tk.Frame(self)
+        frame.pack(fill="both", expand=True)
+        matches = self.currentMatches
+        for index, teams in enumerate(matches):
+            if len(teams)<4:
+                teams.append("")
+            entry = tk.Entry(frame)
+            entry.insert(0, str(1+index))
+            teams[-1] = entry
+        tk.Label(frame, text="Team A").grid(
+            column=0, row=0, padx=5, pady=10
+        ),
+        tk.Label(frame, text="Team B").grid(
+            column=1, row=0, padx=5, pady=10
+        ),
+        tk.Label(frame, text="Referee").grid(
+            column=2, row=0, padx=5, pady=10
+        ),
+        tk.Label(frame, text="Position").grid(
+            column=3, row=0, padx=5, pady=10
+        )
+        for index, teams in enumerate(matches):
+            tk.Label(frame, text=teams[0].name).grid(
+                column=0, row=1+index, padx=5, pady=5
+            ),
+            tk.Label(frame, text=teams[1].name).grid(
+                column=1, row=1+index, padx=5, pady=5
+            ),
+            tk.Label(frame, text=teams[2].name).grid(
+                column=2, row=1+index, padx=5, pady=5
+            ),
+            teams[3].grid(
+                column=3, row=1+index, padx=5, pady=5
+            )
+        reorderButton = tk.Button(frame, text="Refresh Order", command=lambda: self.updateOrder(matches, frame))
+        reorderButton.grid(
+            column=1, row=200, padx=5, pady=10
+        )
+
+    def updateOrder(self, list, frame):
+        list = sorted(list, key=lambda x: x[-1].get())
+        matches = [match[:-1] for match in list]
+        self.currentMatches = matches
+        self.__addReferees()
+        self.displayList(frame)   
+
+    def __addReferees(self):
+        sortedReferees = sorted(self.tournament.teams, key=lambda team: team.gamesRefed)
+        for index, match in enumerate(self.currentMatches):
+            for ref in sortedReferees:
+                currentMatch = [match[0].name, match[1].name]
+                if index<len(self.currentMatches)-1:
+                    nextMatch = self.currentMatches[index+1]
+                    nextMatch = [nextMatch[0].name, nextMatch[1].name]
+                else:
+                    nextMatch = []
+                if index > 0:
+                    previousMatch = self.currentMatches[index-1]
+                    previousMatch = [previousMatch[0].name, previousMatch[1].name]
+                else:
+                    previousMatch = []
+                if (ref.name not in currentMatch) \
+                    and (ref.name not in nextMatch) \
+                    and (ref.name not in previousMatch):
+                    match[2] = ref
+                    sortedReferees.remove(ref)
+                    break
+
 class SwissTournament(Tournament):
 
     def __init__(self, fileName = None):
@@ -31,27 +112,31 @@ class SwissTournament(Tournament):
             oneGroup += group
         return oneGroup
 
-    def generateGames(self):
+    def generateGames(self, mainWindow = None):
         numberOfGamesPerRound = self.gamesPerRound
         sortedTable = self.sortGroups([self.teams])[0]
-        for roundNumber in range(0, self.rounds):
+        for roundNumber in range(self.currentRound, self.rounds+1):
             firstGameOfRound = roundNumber*numberOfGamesPerRound
             if self.previousRoundFinished(roundNumber, numberOfGamesPerRound) or roundNumber == 0:
                 self.__currentMatches = self.getTeamsToMatch(sortedTable)
                 self.__addReferees()
-                self.getMatchOrder()
+                self.getMatchOrder(mainWindow)
                 self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
             else:
                 self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
                 self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
-        self.__addFinals(numberOfGamesPerRound)
+        self.__addFinals(numberOfGamesPerRound, sortedTable)
         self.__addGamesToList((self.rounds+1)*numberOfGamesPerRound, numberOfGamesPerRound)
     
-    def __addFinals(self, numberOfGamesPerRound):
+    def __addFinals(self, numberOfGamesPerRound, sortedTable):
         self.__currentMatches = []
-        if self.previousRoundFinished(self.rounds, numberOfGamesPerRound):
-            # TODO: Generate finals if tournament finished
-            pass
+        if self.previousRoundFinished(self.rounds+1, numberOfGamesPerRound):
+            for index in range(numberOfGamesPerRound):
+                match = []
+                for i in range(2):
+                    place = (numberOfGamesPerRound-index)*2-1+i
+                    match.append(sortedTable[place-1])
+                self.__currentMatches.append(match)
         else:
             for index in range(numberOfGamesPerRound):
                 match = []
@@ -90,9 +175,9 @@ class SwissTournament(Tournament):
         round = []
         for index, game in enumerate(self.__currentMatches):
             if len(self.games)>0 and index == 0:
-                currentDateTime = datetime.datetime.strptime(self.games[-1].time, '%H:%M')
+                currentDateTime = datetime.datetime.strptime(self.games[firstGameOfRound-1].time, '%H:%M')
                 currentDateTime += datetime.timedelta(minutes=(self.breakBetweenRounds+self.timePerGame))
-                currentDay = self.games[-1].day
+                currentDay = self.games[firstGameOfRound-1].day
             if len(self.endTimes) > currentDay:
                 if currentDateTime > datetime.datetime.strptime(self.endTimes[currentDay], '%H:%M'):
                     currentDay += 1
@@ -110,7 +195,6 @@ class SwissTournament(Tournament):
                     [[], []]
                     )
             )
-            game[2].gamesRefed += 1
             currentDateTime += datetime.timedelta(minutes=(self.timePerGame))
         if len(self.games) <= firstGameOfRound:
             self.games += round
@@ -122,19 +206,32 @@ class SwissTournament(Tournament):
 
     def getTeamsToMatch(self, sortedTable, emptyMode=False):
         matches = []
-        selectedTeamBs = []
+        selectedTeams = []
         if emptyMode:
             for index in range(int(len(sortedTable)/2)):
                 matches.append([self.emptyTeam, self.emptyTeam, self.emptyTeam])
             return matches
         for teamAIndex in range(len(sortedTable)-1):
-            if not teamAIndex in selectedTeamBs:
+            if not teamAIndex in selectedTeams:
                 for teamBIndex in range(teamAIndex+1, len(sortedTable)):
-                    if not self.checkIfGameExists(sortedTable[teamAIndex], sortedTable[teamBIndex]):
+                    if not self.checkIfGameExists(sortedTable[teamAIndex], sortedTable[teamBIndex]) \
+                        and teamBIndex not in selectedTeams:
                         matches.append([sortedTable[teamAIndex], sortedTable[teamBIndex], ""])
-                        selectedTeamBs.append(teamBIndex)
+                        selectedTeams.append(teamBIndex)
+                        selectedTeams.append(teamAIndex)
+                        break
+        if len(matches) < 5:
+            # TODO: changes this to not create an existing game
+            for teamAIndex in range(len(sortedTable)-1):
+                if not teamAIndex in selectedTeams:
+                    for teamBIndex in range(teamAIndex+1, len(sortedTable)):
+                        if teamBIndex not in selectedTeams:
+                            matches.append([sortedTable[teamAIndex], sortedTable[teamBIndex], ""])
+                        selectedTeams.append(teamBIndex)
+                        selectedTeams.append(teamAIndex)
                         break
         return matches
+
 
     def checkIfGameExists(self, teamA, teamB):
         for game in self.games:
@@ -154,62 +251,11 @@ class SwissTournament(Tournament):
                 return True
         return False
     
-    def getMatchOrder(self):
-        root = tk.Tk()
-        root.title("List Reorder")
-        self.displayList(root)
-        root.mainloop() 
-
-    def displayList(self, root, frame=None):
-        # TODO: Clean this up
-        if frame:    
-            frame.destroy()
-        frame = tk.Frame(root)
-        frame.pack(fill="both", expand=True)
-        matches = self.__currentMatches
-        for index, teams in enumerate(matches):
-            if len(teams)<4:
-                teams.append("")
-            entry = tk.Entry(frame)
-            entry.insert(0, str(1+index))
-            teams[-1] = entry
-        tk.Label(frame, text="Team A").grid(
-            column=0, row=0, padx=5, pady=10
-        ),
-        tk.Label(frame, text="Team B").grid(
-            column=1, row=0, padx=5, pady=10
-        ),
-        tk.Label(frame, text="Referee").grid(
-            column=2, row=0, padx=5, pady=10
-        ),
-        tk.Label(frame, text="Position").grid(
-            column=3, row=0, padx=5, pady=10
-        )
-        for index, teams in enumerate(matches):
-            tk.Label(frame, text=teams[0].name).grid(
-                column=0, row=1+index, padx=5, pady=5
-            ),
-            tk.Label(frame, text=teams[1].name).grid(
-                column=1, row=1+index, padx=5, pady=5
-            ),
-            tk.Label(frame, text=teams[2].name).grid(
-                column=2, row=1+index, padx=5, pady=5
-            ),
-            teams[3].grid(
-                column=3, row=1+index, padx=5, pady=5
-            )
-        reorderButton = tk.Button(frame, text="Refresh Order", command=lambda: self.updateOrder(matches, frame, root))
-        reorderButton.grid(
-            column=1, row=200, padx=5, pady=10
-        )
-
-    def updateOrder(self, list, frame, root):
-        list = sorted(list, key=lambda x: x[-1].get())
-        matches = [match[:-1] for match in list]
-        self.__currentMatches = matches
-        self.__addReferees()
-        self.displayList(root, frame)   
-
+    def getMatchOrder(self, mainwindow):
+        getMatches = MatchGui(mainwindow, self, self.__currentMatches)
+        tk.Toplevel.wait_window(mainwindow, getMatches)
+        self.__currentMatches = getMatches.currentMatches
+        
     def __addReferees(self):
         sortedReferees = sorted(self.teams, key=lambda team: team.gamesRefed)
         for index, match in enumerate(self.__currentMatches):
@@ -231,7 +277,7 @@ class SwissTournament(Tournament):
                     match[2] = ref
                     sortedReferees.remove(ref)
                     break
-
+    
     def generateGamesOfRound(self, roundNumber):
         gamesPerRound = self.gamesPerRound
         games = []
@@ -258,7 +304,8 @@ class SwissTournament(Tournament):
             "dates": self.dates,
             "currentRound": self.currentRound
         }
-        SaveAndRestore.save(self.fileName, dict)
+        filename = self.fileName.name[:-5] + "_Round-" + str(self.currentRound) + ".json"
+        SaveAndRestore.save(filename, dict)
         
     def generatePdf(self):
         gamesPerRound = self.gamesPerRound
