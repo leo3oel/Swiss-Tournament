@@ -115,7 +115,7 @@ class SwissTournament(Tournament):
     def generateGames(self, mainWindow = None):
         numberOfGamesPerRound = self.gamesPerRound
         sortedTable = self.sortGroups([self.teams])[0]
-        for roundNumber in range(self.currentRound, self.rounds+1):
+        for roundNumber in range(self.currentRound, self.rounds):
             firstGameOfRound = roundNumber*numberOfGamesPerRound
             if self.previousRoundFinished(roundNumber, numberOfGamesPerRound) or roundNumber == 0:
                 self.__currentMatches = self.getTeamsToMatch(sortedTable)
@@ -126,11 +126,11 @@ class SwissTournament(Tournament):
                 self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
                 self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
         self.__addFinals(numberOfGamesPerRound, sortedTable)
-        self.__addGamesToList((self.rounds+1)*numberOfGamesPerRound, numberOfGamesPerRound)
+        self.__addGamesToList((self.rounds)*numberOfGamesPerRound, numberOfGamesPerRound)
     
     def __addFinals(self, numberOfGamesPerRound, sortedTable):
         self.__currentMatches = []
-        if self.previousRoundFinished(self.rounds+1, numberOfGamesPerRound):
+        if self.previousRoundFinished(self.rounds, numberOfGamesPerRound):
             for index in range(numberOfGamesPerRound):
                 match = []
                 for i in range(2):
@@ -284,6 +284,13 @@ class SwissTournament(Tournament):
         for gameIndex in range(gamesPerRound*roundNumber, gamesPerRound*(roundNumber+1)):
             games.append(self.games[gameIndex])
         return games
+    
+    def getScorerTable(self):
+        scorers = []
+        for team in self.teams:
+            scorers += team.getScorers()
+        scorers = sorted(scorers, key=lambda x: x[-1], reverse=True)
+        return scorers
 
     def saveFile(self):
         teams = []
