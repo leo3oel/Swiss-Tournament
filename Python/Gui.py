@@ -22,6 +22,7 @@ class EntryWindow(tk.Tk):
         self.__htmlGenerator = GenerateAndDisplayHtml(self.__tournament, True, self.__tournament.gamesPerRound)
         self.__htmlGenerator.generateHtmlFile()
         self.__htmlGenerator.startServer()
+        self.protocol("WM_DELETE_WINDOW", self.onclosing)
         self.__htmlGenerator.openPage()
         self.__createWindow()
         self.mainloop()
@@ -225,6 +226,9 @@ class EntryWindow(tk.Tk):
 
     def __createPDF(self):
         self.__tournament.generatePdf()
+
+    def onclosing(self):
+        self.__htmlGenerator.closeServer()
 
 class MainGui:
 
