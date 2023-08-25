@@ -229,6 +229,7 @@ class EntryWindow(tk.Tk):
 
     def onclosing(self):
         self.__htmlGenerator.closeServer()
+        self.destroy()
 
 class MainGui:
 
