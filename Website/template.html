@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>SwissTournament</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="live.js"></script>
+</head>
+<body>
+    <div class="column-wrapper">
+        <div class="column-left">
+            <h1 class="table-header">Spielplan</h1>
+            {%- for day in days %}
+            <table class="table">
+                <tr class="table-header">
+                    <td colspan="100%">{{ day }}</td>
+                </tr>
+                <tr class="table-firstline">
+                    <td class="firstline">Nr.</td>
+                    <td class="firstline">Zeit</td>
+                    <td class="firstline" colspan="2">Team A</td>
+                    <td class="firstline"></td>
+                    <td class="firstline" colspan="2">Team B</td>
+                    <td class="firstline">Referee</td>
+                </tr>
+                <tr>
+                    <th class="horizontalLine" colspan="100%"></th>
+                </tr>
+                {%- for game in games[loop.index-1] %}
+                {%- if loop.index%2==0 %}
+                <tr class="table even">
+                {%- else %}
+                <tr class="table odd">
+                {%- endif %}
+                    <td class="line">{{ game.number }}</td>
+                    <td class="line">{{ game.time }}</td>
+                    <td class="line">{{ game.teamA }}</td>
+                    <td class="line">{{ game.scoreA }}</td>
+                    <td class="line">:</td>
+                    <td class="line">{{ game.scoreB }}</td>
+                    <td class="line">{{ game.teamB }}</td>
+                    <td class="line">{{ game.referee }}</td>
+                </tr>
+                {%- if game.number%gamesPerRound == 0 %}
+                <tr>
+                    <th class="horizontalLineSmall" colspan="100%"></th>
+                </tr>
+                {%- endif %}
+                {% endfor %}
+            </table>
+            {%- endfor %}
+        </div>
+        <div class="column-right">
+            <h1 class="table-header">Tabelle</h1>
+            <table class="table">
+                <tr class="table-firstline">
+                    <th class="firstline">Platz</th>
+                    <th class="firstline">Name</th>
+                    <th class="firstline">Punkte</th>
+                    <th class="firstline">Tore +</th>
+                    <th class="firstline">Tore -</th>
+                    <th class="firstline">Tore +/-</th>
+                    <th class="firstline">Spiele</th>
+                </tr>
+                <tr>
+                    <th class="horizontalLine" colspan="100%"></th>
+                </tr>
+                {%- for team in table %}
+                {%- if loop.index%2==0 %}
+                <tr class="table even">
+                {%- else %}
+                <tr class="table odd">
+                {%- endif %}
+                    <th class="line">{{ loop.index }}</th>
+                    <th class="line">{{ team.name }}</th>
+                    <th class="line">{{ team.points }}</th>
+                    <th class="line">{{ team.plusGoals }}</th>
+                    <th class="line">{{ team.minusGoals }}</th>
+                    <th class="line">{{ team.goalDiff }}</th>
+                    <th class="line">{{ team.numberOfGames }}</th>
+                </tr>
+            {%- endfor %}
+            </table>
+            <h1 class="table-header">Torschützen</h1>
+            <table class="table">
+                <tr class="table-firstline">
+                    <th class="firstline">Platz</th>
+                    <th class="firstline">Name</th>
+                    <th class="firstline">Team</th>
+                    <th class="firstline">Nummer</th>
+                    <th class="firstline">Tore</th>
+                </tr>
+                <tr>
+                    <th class="horizontalLine" colspan="100%"></th>
+                </tr>
+                {%- for scorer in scorers %}
+                {%- if loop.index%2==0 %}
+                <tr class="table even">
+                {%- else %}
+                <tr class="table odd">
+                {%- endif %}
+                    <th class="line">{{ loop.index }}</th>
+                    <th class="line">{{ scorer.name }}</th>
+                    <th class="line">{{ scorer.team }}</th>
+                    <th class="line">{{ scorer.number }}</th>
+                    <th class="line">{{ scorer.goals }}</th>
+                </tr>
+            {%- endfor %}
+            </table>
+        </div>
+    </div>
+</body>
+</html>

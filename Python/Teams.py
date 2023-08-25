@@ -32,9 +32,13 @@ class Player:
         self.greenCards+=1
 
     def returnPlayer(self):
+        if type(self.name) is list:
+            name = " ".join(self.name)
+        else:
+            name = self.name
         text = [
             str(self.number),
-            " ".join(self.name),
+            name,
             self.teamName,
             str(self.goals)
         ]
@@ -122,6 +126,11 @@ class Team:
             "gamesRefed": self.gamesRefed
         }
         return dict
+    
+    def getScorers(self):
+        scorer = [player.returnPlayer() for player in self.players]
+        scorer = sorted(scorer, reverse=True, key=lambda x: x[-1])
+        return scorer
     
 class EmptyTeam(Team):
 

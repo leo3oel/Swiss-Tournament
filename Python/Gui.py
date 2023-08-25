@@ -7,29 +7,7 @@ import tkinter as tk
 from tkinter import messagebox as msgbx
 
 from SwissTournament import SwissTournament
-
-class GamesWindow:
-
-    def __init__(self):
-        pass
-
-class TableWindow(tk.Toplevel):
-
-    def __init__(self, master, tournament):
-        tk.Toplevel.__init__(self, master)
-        self.title("Tournament Table")
-        self.__tableFrame = tk.Frame(self)
-        self.tournament = tournament
-
-    def refreshTable(self, sortedTeams):
-        self.__tableFrame.destroy()
-        self.__tableFrame = tk.Frame(self)
-        self.__tableFrame.grid( row=0, column=0)
-        row = 0
-        for team in sortedTeams:
-            row += 1
-            teamName = tk.Label(self.__tableFrame, text=team.name)
-            teamName.grid(row=row, column=0)
+from HtmlGenerator import GenerateAndDisplayHtml
 
 class EntryWindow(tk.Tk):
 
@@ -38,8 +16,13 @@ class EntryWindow(tk.Tk):
         self.title("Game Entry")
         self.__gameNumber = 0
         self.__tournament = tournament
+        if len(tournament.games) == 0:
+            tournament.generateGames(self)
         self.__currentGameFrame = tk.Frame(self)
-        self.__tableWindow = TableWindow(self, self.__tournament)
+        self.__htmlGenerator = GenerateAndDisplayHtml(self.__tournament, True, self.__tournament.gamesPerRound)
+        self.__htmlGenerator.generateHtmlFile()
+        self.__htmlGenerator.startServer()
+        self.__htmlGenerator.openPage()
         self.__createWindow()
         self.mainloop()
 
@@ -50,7 +33,6 @@ class EntryWindow(tk.Tk):
             scoreA = game.score[0]
             scoreB = game.score[1]
         sortedTeams = self.__tournament.sortGroups([self.__tournament.teams])[0]
-        self.__tableWindow.refreshTable(sortedTeams)
         self.__currentGameFrame.destroy()
         self.__currentGameFrame = tk.Frame(self)
         self.__currentGameFrame.grid(row=0, column=0, columnspan=4)
@@ -146,8 +128,10 @@ class EntryWindow(tk.Tk):
                 self.__gameNumber = 0
                 self.__tournament.currentRound += 1
                 self.__tournament.generateGames(self)
+                self.__tournament.saveFile()
+                self.__htmlGenerator.generateHtmlFile()
             else:
-                self.__gameNumber = self.__tournament.gamesPerRound-1
+                self.__gameNumber -= 1
         self.__createWindow()
 
     def __saveGame(self, game, scoreA, scoreB, scorerA, scorerB):
@@ -159,6 +143,7 @@ class EntryWindow(tk.Tk):
         game = self.__setNewValuesForGame(game, scoreA, scoreB, scorerA, scorerB)
         self.__saveToList(game)
         self.__tournament.saveFile()
+        self.__htmlGenerator.generateHtmlFile()
         return 1
 
     def __setNewValuesForGame(self, game, scoreA, scoreB, scorerA, scorerB):
@@ -245,8 +230,6 @@ class MainGui:
 
     def __init__(self):
         tournament = SwissTournament()
-        if len(tournament.games) == 0:
-            tournament.generateGames()
         EntryWindow(tournament)
 
 if __name__ == "__main__":
