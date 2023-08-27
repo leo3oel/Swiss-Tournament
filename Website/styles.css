@@ -29,8 +29,31 @@ h1{
     margin-right: auto;
     margin-bottom: 2vw;
 }
+
 table{
     width: 27vw;
+}
+
+.day1{
+    margin-right: 2vw;
+}
+
+@media screen and (orientation: portrait) {
+    table {
+        width: 80vw;
+    }
+    .day1{
+        margin-right: 0vw;
+    }
+}
+
+@media screen and (orientation: landscape) {
+    table {
+        width: 27vw;
+    }
+    .day1{
+        margin-right: 2vw;
+    }
 }
 
 /* Gestaltung Tabellengerüst */
@@ -73,10 +96,6 @@ td.line{
     height: 25px;
 }
 /* Tabelle Samstag und Sonntag */
-
-.day1{
-    margin-right: 2vw;
-}
 
 .headerlinks{
     background-color: #f1f3f4;
