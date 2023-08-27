@@ -25,10 +25,13 @@
                     <th class="firstline ersteTabueber">Referee</th>
                     
                 </tr>
-                <!-- <tr>
-                    <th class="horizontalLine" colspan="100%"></th>
-                </tr> -->
+                <tr>
                 {%- for game in games[loop.index-1] %}
+                {%- if (game.number-1)%gamesPerRound == 0 and game.number != 1 %}
+                <tr>
+                    <th class="horizontalLine" colspan="100%"></th>
+                </tr>
+                {%- endif %}
                 {%- if loop.index%2==0 %}
                 <tr class="table even">
                 {%- else %}
@@ -44,11 +47,6 @@
                     <td id="TeamB" class="line">{{ game.teamB }}</td>
                     <td id="Schiri" class="line">{{ game.referee }}</td>
                 </tr>
-                {%- if game.number%gamesPerRound == 0 %}
-                <!-- <tr>
-                    <th class="horizontalLineSmall" colspan="100%"></th>
-                </tr> -->
-                {%- endif %}
                 {% endfor %}
             </table>
         </div>
@@ -66,9 +64,6 @@
                     <th class="firstline zweiteTabueber">Tore +/-</th>
                     <th class="firstline zweiteTabueber">Spiele</th>
                 </tr>
-                <!-- <tr>
-                    <th class="horizontalLine" colspan="100%"></th>
-                </tr> -->
                 {%- for team in table %}
                 {%- if loop.index%2==0 %}
                 <tr class="table even">
@@ -94,9 +89,6 @@
                     <th class="firstline zweiteTabueber">Nummer</th>
                     <th class="firstline zweiteTabueber">Tore</th>
                 </tr>
-                <!-- <tr>
-                    <th class="horizontalLine" colspan="100%"></th>
-                </tr> -->
                 {%- for scorer in scorers %}
                 {%- if loop.index%2==0 %}
                 <tr class="table even">

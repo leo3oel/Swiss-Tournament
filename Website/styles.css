@@ -47,13 +47,9 @@ th.firstline {
     font-weight: bold;
 } 
 
-/* th.horizontalLine {
+th.horizontalLine {
     border-bottom: 2px solid black;
-} */
-
-/* th.horizontalLineSmall {
-    border-bottom: 1px solid red;
-} */
+}
 
 table, caption{
     border: 2px solid #F5F5F5;

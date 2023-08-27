@@ -221,16 +221,15 @@ class SwissTournament(Tournament):
                         selectedTeams.append(teamBIndex)
                         selectedTeams.append(teamAIndex)
                         break
-        if len(matches) < 5:
-            # TODO: changes this to not create an existing game
+        if len(matches) < self.gamesPerRound:
             for teamAIndex in range(len(sortedTable)-1):
-                if not teamAIndex in selectedTeams:
+                if teamAIndex not in selectedTeams:
                     for teamBIndex in range(teamAIndex+1, len(sortedTable)):
                         if teamBIndex not in selectedTeams:
                             matches.append([sortedTable[teamAIndex], sortedTable[teamBIndex], ""])
-                        selectedTeams.append(teamBIndex)
-                        selectedTeams.append(teamAIndex)
-                        break
+                            selectedTeams.append(teamBIndex)
+                            selectedTeams.append(teamAIndex)
+                            break
         return matches
 
 
