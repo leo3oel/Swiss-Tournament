@@ -3,7 +3,7 @@ Adds Teamnames, times and gamenumber to GameReport
 """
 import openpyxl, os
 
-from DefinedTournament import DefinedTournament
+from SwissTournament import SwissTournament
 
 class Report:
 
@@ -19,17 +19,18 @@ class Report:
         pdfFileName = "report_Game-" + str(number) + ".pdf"
         self.__outputPath = os.path.join(os.path.dirname(templatePath), filename)
 
-    def generateReport(self):
+    def generateReport(self,  teamNames):
         template = openpyxl.load_workbook(self.__templatePath)
         sheet = template.active 
         sheet.cell(row=7, column=3).value = self.__time
         sheet.cell(row=10, column=1).value = self.__date
-        sheet.cell(row=12, column=4).value = self.__referee
-        sheet.cell(row=22, column=2).value = self.__teamA.name
-        sheet.cell(row=22, column=6).value = self.__teamB.name
         sheet.cell(row=7, column=1).value = self.__gameNumber
-        self.__enterPlayers(sheet, self.__teamA.players, [24, [1, 2, 4]])
-        self.__enterPlayers(sheet, self.__teamB.players, [24, [5, 6, 7]])
+        if teamNames:
+            sheet.cell(row=12, column=4).value = self.__referee
+            sheet.cell(row=22, column=2).value = self.__teamA.name
+            sheet.cell(row=22, column=6).value = self.__teamB.name
+            self.__enterPlayers(sheet, self.__teamA.players, [24, [1, 2, 4]])
+            self.__enterPlayers(sheet, self.__teamB.players, [24, [5, 6, 7]])
         template.save(filename=self.__outputPath)
 
     def __enterPlayers(self, sheet, players, startCell):
@@ -46,16 +47,16 @@ class GenerateReports:
     templatePath = os.path.join(os.getcwd(), "Reports", "template.xlsx")
 
     @staticmethod
-    def generateGroupReports(tournament):
+    def generateGroupReports(tournament, teamNames):
         for index, game in enumerate(tournament.games):
             try:
                 report = Report(game, index+1, tournament.dates, GenerateReports.templatePath)
-                report.generateReport()
+                report.generateReport(teamNames)
             except:
                 print("Error occured stopped at Game Nr. " + str(index+1))
                 break
             
 
 if __name__ == "__main__":
-    tournament = DefinedTournament()
-    GenerateReports.generateGroupReports(tournament)
+    tournament = SwissTournament()
+    GenerateReports.generateGroupReports(tournament, teamNames=False)

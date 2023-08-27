@@ -127,6 +127,7 @@ class SwissTournament(Tournament):
                 self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
         self.__addFinals(numberOfGamesPerRound, sortedTable)
         self.__addGamesToList((self.rounds)*numberOfGamesPerRound, numberOfGamesPerRound)
+        self.saveFile()
     
     def __addFinals(self, numberOfGamesPerRound, sortedTable):
         self.__currentMatches = []
@@ -220,16 +221,15 @@ class SwissTournament(Tournament):
                         selectedTeams.append(teamBIndex)
                         selectedTeams.append(teamAIndex)
                         break
-        if len(matches) < 5:
-            # TODO: changes this to not create an existing game
+        if len(matches) < self.gamesPerRound:
             for teamAIndex in range(len(sortedTable)-1):
-                if not teamAIndex in selectedTeams:
+                if teamAIndex not in selectedTeams:
                     for teamBIndex in range(teamAIndex+1, len(sortedTable)):
                         if teamBIndex not in selectedTeams:
                             matches.append([sortedTable[teamAIndex], sortedTable[teamBIndex], ""])
-                        selectedTeams.append(teamBIndex)
-                        selectedTeams.append(teamAIndex)
-                        break
+                            selectedTeams.append(teamBIndex)
+                            selectedTeams.append(teamAIndex)
+                            break
         return matches
 
 
@@ -311,7 +311,11 @@ class SwissTournament(Tournament):
             "dates": self.dates,
             "currentRound": self.currentRound
         }
-        filename = self.fileName.name[:-5] + "_Round-" + str(self.currentRound) + ".json"
+        if "_Round-" in self.fileName.name:
+            filename = self.fileName.name[:self.fileName.name.index("_Round-")]
+            filename += "_Round-" + str(self.currentRound) + ".json"
+        else:
+            filename = self.fileName.name[:-5] + "_Round-" + str(self.currentRound) + ".json"
         SaveAndRestore.save(filename, dict)
         
     def generatePdf(self):

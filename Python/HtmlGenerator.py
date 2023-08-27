@@ -33,12 +33,25 @@ class GenerateAndDisplayHtml:
         output = self.templateMobile.render(table=table, days=self.tournament.days, games=gamesPerDay, gamesPerRound=self.tournament.gamesPerRound)
         with open(self.outputPathMobile, 'w') as file:
             file.write(output)
-        try: 
-            returnValue = subprocess.check_output(["git", "diff", "--exit-code", "Website/planMobile.html"], stderr=subprocess.STDOUT)
-        except:
-            subprocess.call(["git", "commit", "-m", 
-                            "auto commit: plan updated", "Website/planMobile.html"])
-            subprocess.call(["git", "push", "origin", "tournament-2023"])
+        if self.get_current_git_branch() == "turnier-2023":
+            try: 
+                returnValue = subprocess.check_output(["git", "diff", "--exit-code", "Website/planMobile.html"], stderr=subprocess.STDOUT)
+            except:
+                subprocess.call(["git", "commit", "-m", 
+                                "auto commit: plan updated", "Website/planMobile.html"])
+                subprocess.call(["git", "push", "origin", "tournament-2023"])
+
+    def get_current_git_branch(self):
+        try:
+            result = subprocess.run(["git", "branch", "--show-current"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            if result.returncode == 0:
+                return result.stdout.strip()
+            else:
+                print("Error:", result.stderr)
+                return None
+        except Exception as e:
+            print("An error occurred:", e)
+            return None
 
     def __getFormatedTable(self):
         sortedTable = self.tournament.sortGroups([self.tournament.teams])[0]

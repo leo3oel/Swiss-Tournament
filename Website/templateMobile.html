@@ -3,78 +3,81 @@
     <meta charset="UTF-8">
     <title>SwissTournament</title>
     <link rel="stylesheet" href="styles.css">
-    <script type="text/javascript" src="live.js"></script>
 </head>
 <body>
     <h1 class="table-header">Spielplan</h1>
-    {%- for day in days %}
-    <table class="table">
-        <tr class="table-header">
-            <td colspan="100%">{{ day }}</td>
-        </tr>
-        <tr class="table-firstline">
-            <td class="firstline">Nr.</td>
-            <td class="firstline">Zeit</td>
-            <td class="firstline" colspan="2">Team A</td>
-            <td class="firstline"></td>
-            <td class="firstline" colspan="2">Team B</td>
-            <td class="firstline">Referee</td>
-        </tr>
-        <tr>
-            <th class="horizontalLine" colspan="100%"></th>
-        </tr>
-        {%- for game in games[loop.index-1] %}
-        {%- if loop.index%2==0 %}
-        <tr class="table even">
-        {%- else %}
-        <tr class="table odd">
-        {%- endif %}
-            <td class="line">{{ game.number }}</td>
-            <td class="line">{{ game.time }}</td>
-            <td class="line">{{ game.teamA }}</td>
-            <td class="line">{{ game.scoreA }}</td>
-            <td class="line">:</td>
-            <td class="line">{{ game.scoreB }}</td>
-            <td class="line">{{ game.teamB }}</td>
-            <td class="line">{{ game.referee }}</td>
-        </tr>
-        {%- if game.number%gamesPerRound == 0 %}
-        <tr>
-            <th class="horizontalLineSmall" colspan="100%"></th>
-        </tr>
-        {%- endif %}
-        {% endfor %}
-    </table>
-    {%- endfor %}
-    <h1 class="table-header">Tabelle</h1>
-    <table class="table">
-        <tr class="table-firstline">
-            <th class="firstline">Platz</th>
-            <th class="firstline">Name</th>
-            <th class="firstline">Punkte</th>
-            <th class="firstline">Tore +</th>
-            <th class="firstline">Tore -</th>
-            <th class="firstline">Tore +/-</th>
-            <th class="firstline">Spiele</th>
-        </tr>
-        <tr>
-            <th class="horizontalLine" colspan="100%"></th>
-        </tr>
-        {%- for team in table %}
-        {%- if loop.index%2==0 %}
-        <tr class="table even">
-        {%- else %}
-        <tr class="table odd">
-        {%- endif %}
-            <td class="line">{{ loop.index }}</th>
-            <td class="line">{{ team.name }}</th>
-            <td class="line">{{ team.points }}</th>
-            <td class="line">{{ team.plusGoals }}</th>
-            <td class="line">{{ team.minusGoals }}</th>
-            <td class="line">{{ team.goalDiff }}</th>
-            <td class="line">{{ team.numberOfGames }}</th>
-        </tr>
-    {%- endfor %}
-    </table>
+    <div class="column-wrapper">
+        <div class="column-left">
+            {%- for day in days %}
+            <div class="day{{ loop.index }}">
+            <table class="table">
+                <tr class="table-header">
+                    <caption class="table-header headerlinks">{{ day }}</caption>
+                </tr>
+                <tr class="table-firstline">
+                    <th class="firstline ersteTabueber">Nr.</th>
+                    <th class="firstline ersteTabueber">Zeit</th>
+                    <th class="firstline ersteTabueber" colspan="2">Team A</th>
+                    <th class="firstline ersteTabueber"></th>
+                    <th class="firstline ersteTabueber" colspan="2">Team B</th>
+                    <th class="firstline ersteTabueber">Referee</th>
+                    
+                </tr>
+                {%- for game in games[loop.index-1] %}
+                {%- if (game.number-1)%gamesPerRound == 0 and game.number != 1 %}
+                <tr>
+                    <th class="horizontalLine" colspan="100%"></th>
+                </tr>
+                {%- endif %}
+                {%- if loop.index%2==0 %}
+                <tr class="table even">
+                {%- else %}
+                <tr class="table odd">
+                {%- endif %}
+            
+                    <td id="Nummer" class="line">{{ game.number }}</td>
+                    <td id="Zeit" class="line">{{ game.time }}</td>
+                    <td id="TeamA" class="line">{{ game.teamA }}</td>
+                    <td id="StandA" class="line">{{ game.scoreA }}</td>
+                    <td id="Doppelpunk" class="line">:</td>
+                    <td id="StandB" class="line">{{ game.scoreB }}</td>
+                    <td id="TeamB" class="line">{{ game.teamB }}</td>
+                    <td id="Schiri" class="line">{{ game.referee }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+            {%- endfor %}
+        </div>
+        <div class="column-right">
+            <table id="Gesamtergebnis" class="table">
+                <caption class="table-header  tabellerecht">Gesamtergebnis</caption>
+                <tr class="table-firstline">
+                    <th class="firstline zweiteTabueber">Platz</th>
+                    <th class="firstline zweiteTabueber">Name</th>
+                    <th class="firstline zweiteTabueber">Punkte</th>
+                    <th class="firstline zweiteTabueber">Tore +</th>
+                    <th class="firstline zweiteTabueber">Tore -</th>
+                    <th class="firstline zweiteTabueber">Tore +/-</th>
+                    <th class="firstline zweiteTabueber">Spiele</th>
+                </tr>
+                {%- for team in table %}
+                {%- if loop.index%2==0 %}
+                <tr class="table even">
+                {%- else %}
+                <tr class="table odd">
+                {%- endif %}
+                    <td class="line linkeTab">{{ loop.index }}</td>
+                    <td class="line linkeTab">{{ team.name }}</td>
+                    <td class="line linkeTab">{{ team.points }}</td>
+                    <td class="line linkeTab">{{ team.plusGoals }}</td>
+                    <td class="line linkeTab">{{ team.minusGoals }}</td>
+                    <td class="line linkeTab">{{ team.goalDiff }}</td>
+                    <td class="line linkeTab">{{ team.numberOfGames }}</td>
+                </tr>
+            {%- endfor %}
+            </table>
+        </div>    
+    </div>
 </body>
 </html>
