@@ -70,13 +70,13 @@
                 {%- else %}
                 <tr class="table odd">
                 {%- endif %}
-                    <th class="line">{{ loop.index }}</th>
-                    <th class="line">{{ team.name }}</th>
-                    <th class="line">{{ team.points }}</th>
-                    <th class="line">{{ team.plusGoals }}</th>
-                    <th class="line">{{ team.minusGoals }}</th>
-                    <th class="line">{{ team.goalDiff }}</th>
-                    <th class="line">{{ team.numberOfGames }}</th>
+                    <td class="line">{{ loop.index }}</th>
+                    <td class="line">{{ team.name }}</th>
+                    <td class="line">{{ team.points }}</th>
+                    <td class="line">{{ team.plusGoals }}</th>
+                    <td class="line">{{ team.minusGoals }}</th>
+                    <td class="line">{{ team.goalDiff }}</th>
+                    <td class="line">{{ team.numberOfGames }}</th>
                 </tr>
             {%- endfor %}
             </table>
@@ -84,7 +84,7 @@
             <table class="table">
                 <tr class="table-firstline">
                     <th class="firstline">Platz</th>
-                    <th class="firstline">Name</th>
+                Website/template.html    <th class="firstline">Name</th>
                     <th class="firstline">Team</th>
                     <th class="firstline">Nummer</th>
                     <th class="firstline">Tore</th>
@@ -98,11 +98,11 @@
                 {%- else %}
                 <tr class="table odd">
                 {%- endif %}
-                    <th class="line">{{ loop.index }}</th>
-                    <th class="line">{{ scorer.name }}</th>
-                    <th class="line">{{ scorer.team }}</th>
-                    <th class="line">{{ scorer.number }}</th>
-                    <th class="line">{{ scorer.goals }}</th>
+                    <td class="line">{{ loop.index }}</th>
+                    <td class="line">{{ scorer.name }}</th>
+                    <td class="line">{{ scorer.team }}</th>
+                    <td class="line">{{ scorer.number }}</th>
+                    <td class="line">{{ scorer.goals }}</th>
                 </tr>
             {%- endfor %}
             </table>
