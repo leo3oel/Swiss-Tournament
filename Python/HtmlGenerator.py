@@ -2,17 +2,22 @@ import jinja2, os
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import webbrowser
 import threading
-    
+import subprocess
+
 class GenerateAndDisplayHtml:
 
     def __init__(self, tournament, swiss, gamesPerRound=1):
         self.templatePath = os.path.join(os.getcwd(), "Website", "template.html")
+        self.templatePathMobile = os.path.join(os.getcwd(), "Website", "templateMobile.html")
         self.outputPath = os.path.join(os.getcwd(), "Website", "plan.html")
+        self.outputPathMobile = os.path.join(os.getcwd(), "Website", "planMobile.html")
         self.tournament = tournament
         self.swiss = swiss
         self.gamesPerRound = gamesPerRound
         with open(self.templatePath) as file:
             self.template = jinja2.Template(file.read())
+        with open(self.templatePathMobile) as file:
+            self.templateMobile = jinja2.Template(file.read())
 
     def generateHtmlFile(self):
         table = self.__getFormatedTable()
@@ -21,6 +26,19 @@ class GenerateAndDisplayHtml:
         output = self.template.render(table=table, days=self.tournament.days, games=gamesPerDay, gamesPerRound=self.tournament.gamesPerRound, scorers=scorers)
         with open(self.outputPath, 'w') as file:
             file.write(output)
+
+    def generateHtmlFileMobile(self):
+        table = self.__getFormatedTable()
+        gamesPerDay = self.__formatGamesForPrinting(self.tournament.games)
+        output = self.templateMobile.render(table=table, days=self.tournament.days, games=gamesPerDay, gamesPerRound=self.tournament.gamesPerRound)
+        with open(self.outputPathMobile, 'w') as file:
+            file.write(output)
+        try: 
+            returnValue = subprocess.check_output(["git", "diff", "--exit-code", "Website/planMobile.html"], stderr=subprocess.STDOUT)
+        except:
+            subprocess.call(["git", "commit", "-m", 
+                            "auto commit: plan updated", "Website/planMobile.html"])
+            subprocess.call(["git", "push", "origin", "tournament-2023"])
 
     def __getFormatedTable(self):
         sortedTable = self.tournament.sortGroups([self.tournament.teams])[0]

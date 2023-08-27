@@ -11,3 +11,5 @@ Reports/*
 !PdfPlan/kcwlogo.png
 !Reports/template.xslx
 !Website/template.html
+!Website/templateMobile.html
+!Website/planMobile.html

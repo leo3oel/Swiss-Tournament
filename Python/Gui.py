@@ -21,6 +21,7 @@ class EntryWindow(tk.Tk):
         self.__currentGameFrame = tk.Frame(self)
         self.__htmlGenerator = GenerateAndDisplayHtml(self.__tournament, True, self.__tournament.gamesPerRound)
         self.__htmlGenerator.generateHtmlFile()
+        self.__htmlGenerator.generateHtmlFileMobile()
         self.__htmlGenerator.startServer()
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
         self.__htmlGenerator.openPage()
@@ -131,6 +132,7 @@ class EntryWindow(tk.Tk):
                 self.__tournament.generateGames(self)
                 self.__tournament.saveFile()
                 self.__htmlGenerator.generateHtmlFile()
+                self.__htmlGenerator.generateHtmlFileMobile()
             else:
                 self.__gameNumber -= 1
         self.__createWindow()
@@ -145,6 +147,7 @@ class EntryWindow(tk.Tk):
         self.__saveToList(game)
         self.__tournament.saveFile()
         self.__htmlGenerator.generateHtmlFile()
+        self.__htmlGenerator.generateHtmlFileMobile()
         return 1
 
     def __setNewValuesForGame(self, game, scoreA, scoreB, scorerA, scorerB):
