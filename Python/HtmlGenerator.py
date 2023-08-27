@@ -2,6 +2,7 @@ import jinja2, os
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 import webbrowser
 import threading
+import subprocess
 
 class GenerateAndDisplayHtml:
 
@@ -32,6 +33,12 @@ class GenerateAndDisplayHtml:
         output = self.templateMobile.render(table=table, days=self.tournament.days, games=gamesPerDay, gamesPerRound=self.tournament.gamesPerRound)
         with open(self.outputPathMobile, 'w') as file:
             file.write(output)
+        try: 
+            returnValue = subprocess.check_output(["git", "diff", "--exit-code", "Website/planMobile.html"], stderr=subprocess.STDOUT)
+        except:
+            subprocess.call(["git", "commit", "-m", 
+                            "auto commit: plan updated", "Website/planMobile.html"])
+            subprocess.call(["git", "push", "origin", "tournament-2023"])
 
     def __getFormatedTable(self):
         sortedTable = self.tournament.sortGroups([self.tournament.teams])[0]
