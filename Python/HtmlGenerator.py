@@ -33,9 +33,12 @@ class GenerateAndDisplayHtml:
         output = self.templateMobile.render(table=table, days=self.tournament.days, games=gamesPerDay, gamesPerRound=self.tournament.gamesPerRound)
         with open(self.outputPathMobile, 'w') as file:
             file.write(output)
-        if self.get_current_git_branch() == "turnier-2023":
+        result = self.get_current_git_branch()
+        result
+        if self.get_current_git_branch() == "tournament-2023":
             try: 
                 returnValue = subprocess.check_output(["git", "diff", "--exit-code", "Website/planMobile.html"], stderr=subprocess.STDOUT)
+                returnValue
             except:
                 subprocess.call(["git", "commit", "-m", 
                                 "auto commit: plan updated", "Website/planMobile.html"])
