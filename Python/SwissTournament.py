@@ -127,6 +127,7 @@ class SwissTournament(Tournament):
                 self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
         self.__addFinals(numberOfGamesPerRound, sortedTable)
         self.__addGamesToList((self.rounds)*numberOfGamesPerRound, numberOfGamesPerRound)
+        self.saveFile()
     
     def __addFinals(self, numberOfGamesPerRound, sortedTable):
         self.__currentMatches = []
@@ -311,7 +312,11 @@ class SwissTournament(Tournament):
             "dates": self.dates,
             "currentRound": self.currentRound
         }
-        filename = self.fileName.name[:-5] + "_Round-" + str(self.currentRound) + ".json"
+        if "_Round-" in self.fileName.name:
+            filename = self.fileName.name[:self.fileName.name.index("_Round-")]
+            filename += "_Round-" + str(self.currentRound) + ".json"
+        else:
+            filename = self.fileName.name[:-5] + "_Round-" + str(self.currentRound) + ".json"
         SaveAndRestore.save(filename, dict)
         
     def generatePdf(self):
