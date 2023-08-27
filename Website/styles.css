@@ -27,6 +27,7 @@ h1{
 .table {
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 2vw;
 }
 table{
     width: 27vw;
@@ -155,7 +156,3 @@ td.line{
     color: white;
 }
 
-#Gesamtergebnis{
-    margin-top: 2vw;
-    margin-bottom: 2vw;
-}
