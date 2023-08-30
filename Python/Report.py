@@ -15,8 +15,7 @@ class Report:
         self.__time = game.time
         self.__templatePath = templatePath
         self.__gameNumber = number
-        filename = "report_Game-" + str(number) + ".xslx"
-        pdfFileName = "report_Game-" + str(number) + ".pdf"
+        filename = "report_Game-" + str(number) + ".xlsx"
         self.__outputPath = os.path.join(os.path.dirname(templatePath), filename)
 
     def generateReport(self,  teamNames):
