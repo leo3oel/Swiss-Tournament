@@ -105,7 +105,7 @@ class SwissTournament(Tournament):
         self.emptyTeam = EmptyTeam()
         self.currentRound = self.restored["currentRound"]
         self.gamesPerRound = int(len(self.teams)/2)
-        if self.currentRound <= self.rounds:
+        if self.currentRound <= self.rounds and len(self.games)>0:
             self.generateGames(finalsOnly=True)
 
     def joinTeamsToOneGroup(self):
