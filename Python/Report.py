@@ -15,7 +15,7 @@ class Report:
         self.__time = game.time
         self.__templatePath = templatePath
         self.__gameNumber = number
-        filename = "report_Game-" + str(number) + ".xslx"
+        filename = "report_Game-" + str(number) + ".xlsx"
         pdfFileName = "report_Game-" + str(number) + ".pdf"
         self.__outputPath = os.path.join(os.path.dirname(templatePath), filename)
 

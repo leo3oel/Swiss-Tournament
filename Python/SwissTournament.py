@@ -105,6 +105,8 @@ class SwissTournament(Tournament):
         self.emptyTeam = EmptyTeam()
         self.currentRound = self.restored["currentRound"]
         self.gamesPerRound = int(len(self.teams)/2)
+        if self.currentRound <= self.rounds and len(self.games)>0:
+            self.generateGames(finalsOnly=True)
 
     def joinTeamsToOneGroup(self):
         oneGroup = []
@@ -112,19 +114,20 @@ class SwissTournament(Tournament):
             oneGroup += group
         return oneGroup
 
-    def generateGames(self, mainWindow = None):
+    def generateGames(self, mainWindow = None, finalsOnly=False):
         numberOfGamesPerRound = self.gamesPerRound
         sortedTable = self.sortGroups([self.teams])[0]
-        for roundNumber in range(self.currentRound, self.rounds):
-            firstGameOfRound = roundNumber*numberOfGamesPerRound
-            if self.previousRoundFinished(roundNumber, numberOfGamesPerRound) or roundNumber == 0:
-                self.__currentMatches = self.getTeamsToMatch(sortedTable)
-                self.__addReferees()
-                self.getMatchOrder(mainWindow)
-                self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
-            else:
-                self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
-                self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
+        if not finalsOnly:
+            for roundNumber in range(self.currentRound, self.rounds):
+                firstGameOfRound = roundNumber*numberOfGamesPerRound
+                if self.previousRoundFinished(roundNumber, numberOfGamesPerRound) or roundNumber == 0:
+                    self.__currentMatches = self.getTeamsToMatch(sortedTable)
+                    self.__addReferees()
+                    self.getMatchOrder(mainWindow)
+                    self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
+                else:
+                    self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
+                    self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
         self.__addFinals(numberOfGamesPerRound, sortedTable)
         self.__addGamesToList((self.rounds)*numberOfGamesPerRound, numberOfGamesPerRound)
         self.saveFile()
