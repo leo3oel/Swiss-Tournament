@@ -292,7 +292,7 @@ class SwissTournament(Tournament):
         scorers = []
         for team in self.teams:
             scorers += team.getScorers()
-        scorers = sorted(scorers, key=lambda x: x[-1], reverse=True)
+        scorers = sorted(scorers, key=lambda x: int(x[-1]), reverse=True)
         return scorers
 
     def saveFile(self):

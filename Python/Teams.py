@@ -129,7 +129,7 @@ class Team:
     
     def getScorers(self):
         scorer = [player.returnPlayer() for player in self.players]
-        scorer = sorted(scorer, reverse=True, key=lambda x: x[-1])
+        scorer = sorted(scorer, reverse=True, key=lambda x: int(x[-1]))
         return scorer
     
 class EmptyTeam(Team):
