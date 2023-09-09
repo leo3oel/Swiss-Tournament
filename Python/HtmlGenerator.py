@@ -57,18 +57,21 @@ class GenerateAndDisplayHtml:
             return None
 
     def __getFormatedTable(self):
-        sortedTable = self.tournament.sortGroups([self.tournament.teams])[0]
-        teams = []
-        for team in sortedTable:
-            teamdict = {
-                "name": team.name,
-                "numberOfGames": team.getNumberOfGames(),
-                "points": team.getPoints(),
-                "plusGoals": team.getPlusGoals(),
-                "minusGoals": team.getMinusGoals(),
-                "goalDiff": team.getGoalDiff()
-            }
-            teams.append(teamdict)
+        if self.tournament.currentRound <= self.tournament.rounds:
+            sortedTable = self.tournament.sortGroups([self.tournament.teams])[0]
+            teams = []
+            for team in sortedTable:
+                teamdict = {
+                    "name": team.name,
+                    "numberOfGames": team.getNumberOfGames(),
+                    "points": team.getPoints(),
+                    "plusGoals": team.getPlusGoals(),
+                    "minusGoals": team.getMinusGoals(),
+                    "goalDiff": team.getGoalDiff()
+                }
+                teams.append(teamdict)
+        else:
+            teams = self.tournament.getFinalsTable()
         return teams
     
     def __formatGamesForPrinting(self, games):

@@ -67,7 +67,7 @@ class Team:
         self.goalsMinus = goalsMinus
         self.gamesRefed = gamesRefed
 
-    def getPoints(self):
+    def getPoints(self) -> int:
         points = 0
         points += self.numberOfTies*1
         points += self.numberOfWins*3
