@@ -1,0 +1,124 @@
+{
+    "startTimes" : ["7:00", "08:00"],
+    "endTimes" : ["17:30", "15:00"],
+    "rounds" : 5,
+    "timePerGroupGame" : 20,
+    "timePerFinalGame" : 30,
+    "breakBetweenRounds" : 15,
+    "days" : ["Samstag", "Sonntag"],
+    "dates" : ["11.07.2024", "12.07.2024"],
+    "currentRound" : 0,
+    "teams" : [
+        {
+            "name" : "Team A",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team B",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team C",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team D",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team E",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team F",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team G",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team H",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team G",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        },
+        {
+            "name" : "Team H",
+            "group" : 0,
+            "players" : [],
+            "numberOfWins" : 0,
+            "numberOfLosses" : 0,
+            "numberOfTies" : 0,
+            "goals+" : 0,
+            "goals-" : 0,
+            "gamesRefed" : 0
+        }
+    ],
+    "games" : []
+}
