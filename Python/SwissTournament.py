@@ -4,12 +4,15 @@ Generates matches, referees for matches
 """
 import tkinter as tk
 import datetime
+import os
+import argparse
 
 from Tournament import Tournament
 from Games import Game
 from SaveAndRestore import SaveAndRestore
 from Teams import Team, EmptyTeam
 from PdfGenerator import PdfGenerator
+import DataContainers as DataContainers
 
 class MatchGui(tk.Toplevel):
 
@@ -62,6 +65,8 @@ class MatchGui(tk.Toplevel):
         reorderButton.grid(
             column=1, row=200, padx=5, pady=10
         )
+        closeToSaveMsg = tk.Label(frame, text="Close this window to accept gameorder.", fg='#f00', font=12)
+        closeToSaveMsg.grid(column=1, row=201, padx=5, pady=15)
 
     def updateOrder(self, list, frame):
         list = sorted(list, key=lambda x: x[-1].get())
@@ -100,7 +105,8 @@ class SwissTournament(Tournament):
         self.startTimes = self.restored["startTimes"]
         self.endTimes = self.restored["endTimes"]
         self.rounds = self.restored["rounds"]
-        self.timePerGame = self.restored["timePerGame"]
+        self.timePerGroupGame = self.restored["timePerGroupGame"]
+        self.timePerFinalGame = self.restored["timePerFinalGame"]
         self.breakBetweenRounds = self.restored["breakBetweenRounds"]
         self.emptyTeam = EmptyTeam()
         self.currentRound = self.restored["currentRound"]
@@ -178,9 +184,13 @@ class SwissTournament(Tournament):
             group = -1
         round = []
         for index, game in enumerate(self.__currentMatches):
+            if finals or ". Platz" in game[1].name:
+                gameTime = self.timePerFinalGame
+            else:
+                gameTime = self.timePerGroupGame
             if len(self.games)>0 and index == 0:
                 currentDateTime = datetime.datetime.strptime(self.games[firstGameOfRound-1].time, '%H:%M')
-                currentDateTime += datetime.timedelta(minutes=(self.breakBetweenRounds+self.timePerGame))
+                currentDateTime += datetime.timedelta(minutes=(self.breakBetweenRounds+gameTime))
                 currentDay = self.games[firstGameOfRound-1].day
             if len(self.endTimes) > currentDay:
                 if currentDateTime > datetime.datetime.strptime(self.endTimes[currentDay], '%H:%M'):
@@ -199,7 +209,7 @@ class SwissTournament(Tournament):
                     [[], []]
                     )
             )
-            currentDateTime += datetime.timedelta(minutes=(self.timePerGame))
+            currentDateTime += datetime.timedelta(minutes=(gameTime))
         if len(self.games) <= firstGameOfRound:
             self.games += round
         else:
@@ -256,7 +266,8 @@ class SwissTournament(Tournament):
     
     def getMatchOrder(self, mainwindow):
         getMatches = MatchGui(mainwindow, self, self.__currentMatches)
-        tk.Toplevel.wait_window(mainwindow, getMatches)
+        if mainwindow:
+            tk.Toplevel.wait_window(mainwindow, getMatches)
         self.__currentMatches = getMatches.currentMatches
         
     def __addReferees(self):
@@ -308,7 +319,8 @@ class SwissTournament(Tournament):
             "startTimes": self.startTimes,
             "endTimes": self.endTimes,
             "rounds": self.rounds,
-            "timePerGame": self.timePerGame,
+            "timePerGroupGame": self.timePerGroupGame,
+            "timePerFinalGame": self.timePerFinalGame,
             "breakBetweenRounds": self.breakBetweenRounds,
             "days": self.days,
             "dates": self.dates,
@@ -327,9 +339,21 @@ class SwissTournament(Tournament):
         generator.generateTexFile()
 
 if __name__ == "__main__":
-    import os
-    swissTournament = SwissTournament()
+    inputFile = None
+    parser = argparse.ArgumentParser(
+                    prog='SwissTournament',
+                    description='Generate Table dynamically for a swiss tournament' +\
+                        " with referees",
+                    epilog='Text at the bottom of help')
+    
+    parser.add_argument("--input_file", dest="inputFile", 
+                        help="Specify an input file that will be loaded at startup.")
+    args = parser.parse_args()
+    
+    if args.inputFile:
+        inputFile = DataContainers.Filename(args.inputFile)
+
+    swissTournament = SwissTournament(fileName=inputFile)
     swissTournament.generateGames()
     swissTournament.saveFile()
     swissTournament.generatePdf()
-

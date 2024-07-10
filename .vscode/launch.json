@@ -14,15 +14,16 @@
         },
         {
             "name": "SwissTournament",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "Python/SwissTournament.py",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "args": ["--input_file", "testfile.json"]
         },
         {
             "name": "Gui",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "Python/Gui.py",
             "console": "integratedTerminal",
