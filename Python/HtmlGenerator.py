@@ -24,18 +24,18 @@ class GenerateAndDisplayHtml:
         gamesPerDay = self.__formatGamesForPrinting(self.tournament.games)
         scorers = self.__getScorerTable()
         output = self.template.render(table=table, days=self.tournament.days, games=gamesPerDay, gamesPerRound=self.tournament.gamesPerRound, scorers=scorers)
-        with open(self.outputPath, 'w') as file:
+        with open(self.outputPath, 'w', encoding="utf8") as file:
             file.write(output)
 
     def generateHtmlFileMobile(self):
         table = self.__getFormatedTable()
         gamesPerDay = self.__formatGamesForPrinting(self.tournament.games)
         output = self.templateMobile.render(table=table, days=self.tournament.days, games=gamesPerDay, gamesPerRound=self.tournament.gamesPerRound)
-        with open(self.outputPathMobile, 'w') as file:
+        with open(self.outputPathMobile, 'w', encoding="utf8") as file:
             file.write(output)
         result = self.get_current_git_branch()
         result
-        if self.get_current_git_branch() == "tournament-2023":
+        if self.get_current_git_branch() == "tournament-2024":
             try: 
                 returnValue = subprocess.check_output(["git", "diff", "--exit-code", "Website/planMobile.html"], stderr=subprocess.STDOUT)
                 returnValue

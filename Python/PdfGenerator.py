@@ -18,7 +18,7 @@ class PdfGenerator:
         teamNames = self.__formatGroupsForPrinting(self.tournament.teams)
         games = self.__formatGamesForPrinting(self.tournament.games)
         output = self.template.render(teamNames=teamNames, groups=self.tournament.teams, days=self.tournament.days, games=games, swiss=self.swiss)
-        with open(self.outputPath, 'w') as file:
+        with open(self.outputPath, 'w', encoding="utf8") as file:
             file.write(output)
         cwd = os.getcwd()
         os.chdir(os.path.dirname(self.outputPath))
