@@ -181,6 +181,14 @@ class Tournament:
                 players.append(playerList)
         return players
     
+    def getTeamWithPlayers(self):
+        teamsWithPlayers = []
+        for group in self.teams:
+            for team in group:
+                players = team.getPlayerNumberAndNameList()
+                teamsWithPlayers.append((team.name, players))
+        return teamsWithPlayers
+    
     def printPlayersWithTeams(self, playerList):
         for team in playerList:
             print("===== " + team[0] + " =====")

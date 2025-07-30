@@ -8,10 +8,13 @@ from tkinter import messagebox as msgbx
 
 from SwissTournament import SwissTournament
 from HtmlGenerator import GenerateAndDisplayHtml
+from PlayerEditor import PlayerEditor
 
 class EntryWindow(tk.Tk):
 
-    def __init__(self, tournament):
+    __tournament : SwissTournament = None
+
+    def __init__(self, tournament: SwissTournament):
         tk.Tk.__init__(self)
         self.title("Game Entry")
         self.__gameNumber = 0
@@ -77,10 +80,12 @@ class EntryWindow(tk.Tk):
         previousGameBt.grid(row=1,column=0, padx=5, pady=5)
         createPdf = tk.Button(self, text="Create PDF", command=self.__createPDF)
         createPdf.grid(row=1,column=1, padx=5, pady=5)
+        openPlayerEditor = tk.Button(self, text="Bearbeite Spieler", command=self.__openPlayerEditor)
+        openPlayerEditor.grid(row=1,column=2, padx=5, pady=5)
         saveGameBt = tk.Button(self, text="Save Game", command=lambda: self.__saveGame(game, scoreA, scoreB, teamAEntrys, teamBEntrys))
-        saveGameBt.grid(row=1,column=2, padx=5, pady=5)
+        saveGameBt.grid(row=1,column=3, padx=5, pady=5)
         nextGameBt = tk.Button(self, text="Next Game", command=lambda: self.__changeGame(1, game, scoreA, scoreB, teamAEntrys, teamBEntrys))
-        nextGameBt.grid(row=1,column=3, padx=5, pady=5)
+        nextGameBt.grid(row=1,column=4, padx=5, pady=5)
         
     def __createPlayerNumberEntry(self, score, scorer, column):
         entryFields = []
@@ -227,6 +232,19 @@ class EntryWindow(tk.Tk):
     def __decrementScorer(self, team, scorer):
         team.incrementGoalCountOfPlayer(scorer, -1)
 
+    def __openPlayerEditor(self):
+        teams_with_players = self.__tournament.getTeamWithPlayers()
+        editor = PlayerEditor(self, teams_with_players, self.__save_refreshed_players)
+        editor.wait_window()
+
+    def __save_refreshed_players(self, team, players):
+        self.__tournament.setPlayerNames(team, players)
+        try:
+            self.__htmlGenerator.generateHtmlFile()
+            self.__htmlGenerator.generateHtmlFileMobile()
+        except Exception as e:
+            print("Error generating HTML files:", e)
+    
     def __createPDF(self):
         self.__tournament.generatePdf()
 

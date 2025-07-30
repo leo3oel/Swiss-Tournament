@@ -10,7 +10,7 @@ import argparse
 from Tournament import Tournament
 from Games import Game
 from SaveAndRestore import SaveAndRestore
-from Teams import Team, EmptyTeam
+from Teams import Team, EmptyTeam, Player
 from PdfGenerator import PdfGenerator
 import DataContainers as DataContainers
 
@@ -337,6 +337,40 @@ class SwissTournament(Tournament):
         gamesPerRound = self.gamesPerRound
         generator = PdfGenerator(self, True, gamesPerRound)
         generator.generateTexFile()
+
+    def getTeamWithPlayers(self):
+        teamsWithPlayers = {}
+        for team in self.teams:
+            players = team.getPlayerNumberAndNameList()
+            teamsWithPlayers[team.name] = players 
+        return teamsWithPlayers
+    
+    def setPlayerNames(self, team, players):
+        for teamObj in self.teams:
+            if teamObj.name == team:
+                for player in players:
+                    player_found = False
+                    for teamPlayer in teamObj.players:
+                        try:
+                            if teamPlayer.number == int(player['number']):
+                                teamPlayer.name = player['name']
+                                player_found = True
+                                break
+                        except ValueError:
+                            pass
+                    if not player_found and player['number'] != '' and player['name'] != '':
+                        teamObj.players.append(
+                            Player(
+                                player['number'],
+                                player['name'],
+                                0,
+                                0,
+                                0,
+                                0,
+                                teamObj.name
+                            )
+                        )
+                    
 
 if __name__ == "__main__":
     inputFile = None

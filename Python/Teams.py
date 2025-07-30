@@ -109,6 +109,13 @@ class Team:
     def getPlayersList(self):
         return self.players
     
+    def getPlayerNumberAndNameList(self):
+        playerList = []
+        for player in self.players:
+            playerList.append(
+                {'number': player.number, 'name' :player.name})
+        return playerList
+    
     def getExportPlayers(self):
         players = self.getPlayersList()
         return [player.export() for player in players]
