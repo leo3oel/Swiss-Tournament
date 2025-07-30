@@ -35,14 +35,14 @@ class GenerateAndDisplayHtml:
             file.write(output)
         result = self.get_current_git_branch()
         result
-        if self.get_current_git_branch() == "tournament-2024":
+        if self.get_current_git_branch() == "tournament-2025":
             try: 
                 returnValue = subprocess.check_output(["git", "diff", "--exit-code", "Website/planMobile.html"], stderr=subprocess.STDOUT)
                 returnValue
             except:
                 subprocess.call(["git", "commit", "-m", 
                                 "auto commit: plan updated", "Website/planMobile.html"])
-                subprocess.call(["git", "push", "origin", "tournament-2023"])
+                subprocess.call(["git", "push", "origin", "tournament-2025"])
 
     def get_current_git_branch(self):
         try:
