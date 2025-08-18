@@ -25,7 +25,7 @@ class Report:
         sheet.cell(row=7, column=3).value = self.__time
         sheet.cell(row=10, column=1).value = self.__date
         sheet.cell(row=7, column=1).value = self.__gameNumber
-        if teamNames:
+        if teamNames and "Platz" not in self.__teamA.name and "Platz" not in self.__teamB.name:
             sheet.cell(row=12, column=4).value = self.__referee
             sheet.cell(row=22, column=2).value = self.__teamA.name
             sheet.cell(row=22, column=6).value = self.__teamB.name
@@ -59,4 +59,4 @@ class GenerateReports:
 
 if __name__ == "__main__":
     tournament = SwissTournament()
-    GenerateReports.generateGroupReports(tournament, teamNames=False)
+    GenerateReports.generateGroupReports(tournament, teamNames=True)
