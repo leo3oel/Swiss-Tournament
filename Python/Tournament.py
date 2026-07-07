@@ -25,7 +25,7 @@ class Tournament:
             if game["group"] < 0:
                 if game["group"] == -1:
                     self.__getIntermediate(game, games, restoredDays, getIntermediateWithTeams)
-                elif game["group"] == -2:
+                elif game["group"] == -1:
                     self.__getFinals(game, games, restoredDays, getFinalsWithTeams)
             else:
                 group = game["group"]
@@ -153,7 +153,7 @@ class Tournament:
         sortedGroups = []
         for group in groupLists:
             sortedGroups.append(
-                sorted(group, key = lambda x : (x.getPoints(), x.getGoalDiff(), x.getPlusGoals()), reverse=True)
+                sorted(group, key = lambda x : (x.getFinalRank(), -x.getPoints(), -x.getGoalDiff(), -x.getPlusGoals()))
             )
         return sortedGroups
 

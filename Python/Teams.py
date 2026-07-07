@@ -60,12 +60,16 @@ class Team:
         self.name = name
         self.players = [Player(*player, self.name) for player in players]
         self.group = group
+        self.finalrank = 0
         self.numberOfWins = numberOfWins
         self.numberOfLosses = numberOfLosses
         self.numberOfTies = numberOfTies
         self.goalsPlus = goalsPlus
         self.goalsMinus = goalsMinus
         self.gamesRefed = gamesRefed
+
+    def getFinalRank(self):
+        return self.finalrank
 
     def getPoints(self):
         points = 0

@@ -4,7 +4,7 @@ A Game of the Tournament
 
 class Game:
 
-    def __init__(self, group, time, day, teamA, teamB, referee, score, scorer):
+    def __init__(self, group, time, day, teamA, teamB, referee, score, scorer, winnerplacement=None):
         self.group = group
         self.time = time
         self.day = day
@@ -13,6 +13,7 @@ class Game:
         self.referee = referee
         self.score = score
         self.scorer = scorer
+        self.winnerplacement = winnerplacement
 
     def setScore(self, teamA, teamB, scorerA, scorerB):
         self.score = [teamA, teamB]
@@ -27,6 +28,7 @@ class Game:
             "teamB": self.teamB.name,
             "referee": self.referee.name,
             "score": self.score,
-            "scorer": self.scorer
+            "scorer": self.scorer,
+            "winnerplacement": self.winnerplacement
         }
         return dict

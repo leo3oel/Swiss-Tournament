@@ -128,7 +128,8 @@ class EntryWindow(tk.Tk):
         self.__gameNumber += relativIndex
         if self.__gameNumber<0:
             self.__gameNumber = 0
-        if self.__gameNumber>=self.__tournament.gamesPerRound:
+        if self.__gameNumber>=self.__tournament.gamesPerRound and self.__tournament.currentRound < self.__tournament.rounds:
+            # Executed only if round is at end
             if msgbx.askyesno("Generate next Round", "Are you sure you want to generate next round?\n" + 
                               "Input for this Round cannot be edited afterwards."
                               ):
@@ -140,9 +141,15 @@ class EntryWindow(tk.Tk):
                 self.__htmlGenerator.generateHtmlFileMobile()
             else:
                 self.__gameNumber -= 1
+        elif self.__gameNumber>=self.__tournament.gamesPerRound and self.__tournament.currentRound == self.__tournament.rounds:
+            msgbx.showinfo("End of Tournament", "Tournament is over, no more games to play")
+            self.__tournament.saveFile()
+            self.__htmlGenerator.generateHtmlFile()
+            self.__htmlGenerator.generateHtmlFileMobile()
         self.__createWindow()
 
     def __saveGame(self, game, scoreA, scoreB, scorerA, scorerB):
+        # Executed after every game
         if not self.__checkIfParametersAreComplete(game, scoreA, scoreB, scorerA, scorerB):
             msgbx.showerror("Arguments missing", "Some values are empty")
             return -1
@@ -168,6 +175,13 @@ class EntryWindow(tk.Tk):
             self.__incrementScorer(game.teamA, int(scorer.get()))
         for scorer in scorerB:
             self.__incrementScorer(game.teamB, int(scorer.get()))
+        if game.group == -2:
+            if scoreA > scoreB:
+                game.teamA.finalrank = game.winnerplacement
+                game.teamB.finalrank = game.winnerplacement + 1
+            else:
+                game.teamB.finalrank = game.winnerplacement
+                game.teamA.finalrank = game.winnerplacement + 1
         self.__changeGameNumbersOfTeam(game, +1)
         game.referee.gamesRefed += 1
         return game
