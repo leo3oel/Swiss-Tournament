@@ -135,7 +135,7 @@ class SwissTournament(Tournament):
                     self.__currentMatches = self.getTeamsToMatch(sortedTable, emptyMode=True)
                     self.__addGamesToList(firstGameOfRound, numberOfGamesPerRound)
         self.__addFinals(numberOfGamesPerRound, sortedTable)
-        self.__addGamesToList((self.rounds)*numberOfGamesPerRound, numberOfGamesPerRound)
+        self.__addGamesToList((self.rounds)*numberOfGamesPerRound, numberOfGamesPerRound, finals=True)
         self.saveFile()
     
     def __addFinals(self, numberOfGamesPerRound, sortedTable):
@@ -181,13 +181,15 @@ class SwissTournament(Tournament):
         currentDay = 0
         group = 0
         if finals:
-            group = -1
+            group = -2
         round = []
         for index, game in enumerate(self.__currentMatches):
             if finals or ". Platz" in game[1].name:
                 gameTime = self.timePerFinalGame
+                winner_placement = self.gamesPerRound*2-index*2-1
             else:
                 gameTime = self.timePerGroupGame
+                winner_placement = None
             if len(self.games)>0 and index == 0:
                 currentDateTime = datetime.datetime.strptime(self.games[firstGameOfRound-1].time, '%H:%M')
                 currentDateTime += datetime.timedelta(minutes=(self.breakBetweenRounds+gameTime))
@@ -206,7 +208,8 @@ class SwissTournament(Tournament):
                     game[1],
                     game[2],
                     [-1, -1],
-                    [[], []]
+                    [[], []],
+                    winner_placement
                     )
             )
             currentDateTime += datetime.timedelta(minutes=(gameTime))
